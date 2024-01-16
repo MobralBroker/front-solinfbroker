@@ -23,6 +23,13 @@ const router = createRouter({
       
       component: () => import('../components/register/registerComponent')
     },
+    {
+      path: '/panel',
+      name: 'panel',
+
+      component: () => import('../components/panel/StockPanel.vue')
+    },
+
   ]
 })
 
