@@ -6,8 +6,6 @@ import '../node_modules/nprogress/nprogress.css'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-
-
 const app = createApp(App)
 
 app.use(router)

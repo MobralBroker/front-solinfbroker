@@ -29,8 +29,19 @@
                             class="form-control mb-2"
                             placeholder="digite seu nome"
                             v-model="formUser.nomeUsuario"
-
                         />
+
+                        <Field
+                            type="text"
+                            id="nome"
+                            name="nome"
+                            class="form-control mb-2"
+                            placeholder="digite seu nome"
+                            style="display: none;"
+                            :value="nomeUsuario"
+                            v-model="dates"
+                        />
+                        
                         <ErrorMessage name="nomeUsuario"
                         class="form-control is-invalid text-danger"
                         />
@@ -77,60 +88,41 @@
                     
                     <!-- SENHA FIM -->
 
-                    <!-- INICIO CPF/CNPJ -->
+                    <!-- INICIO CPF -->
                     <div>
-                        <label for="">CPF/CNPJ</label>
+                        <label for="">CPF</label>
                         <Field
-                            type="cnpj"
-                            id="cnpj"
-                            name="cnpj"
-                            class="form-control mb-2"
-                            placeholder="digite seu CPF/CNPJ"
-                            v-model="formUser.pessoaJuridica[0].cnpj"
-
+                        type="text"
+                        id="cpf"
+                        name="cpf"
+                        class="form-control mb-2"
+                        placeholder="Digite seu CPF sem pontos ou traços"
+                        :rules="validateCPF"
+                        v-model="formUser.pessoaFisica[0].cpf"
                         />
-                        <ErrorMessage name="email"
+
+                        <ErrorMessage name="senha"
                         class="form-control is-invalid text-danger"
                         />
+
                     </div>
-                    <!-- CPF/CNPJ FIM -->
-                    
-                    <!-- INICIO Nome Fantasia -->
-                    <div v-if="formUser.pessoaJuridica[0].cnpj.length > 11" v-on:condicao-verdadeira="formUser.tipo = 'PJ'">
-                        <label for="nomeFantasia">Nome Fantasia</label>
+                    <!-- CPF FIM -->
+
+                   <!-- DATA -->
+                    <div>
+                        <label for="date-input">Data de Nascimento:</label>
                         <Field
-                            type="text"
-                            id="nomeFantasia"
-                            name="nomeFantasia"
-                            class="form-control mb-2"
-                            placeholder="Digite o nome fantasia"
-                            v-model="formUser.pessoaJuridica[0].nomeFantasia"
-                        />
-                        <ErrorMessage
-                            name="nomeFantasia"
-                            component="div"
-                            class="form-control is-invalid text-danger"
-                        />
-                        <label for="razaoSocial">Razão Social </label>
-                        <Field
-                            type="text"
-                            id="razaoSocial"
-                            name="razaoSocial"
-                            class="form-control mb-2"
-                            placeholder="Digite a razão social"
-                            v-model="formUser.pessoaJuridica[0].razaoSocial"
+                        type="text"
+                        id="datanascimento"
+                        name="datanascimento"
+                        class="form-control mb-2"
+                        placeholder="Data de Nascimento 'dd/mm/aaaa'"
+                        v-model="formUser.pessoaFisica[0].dataNascimento"
+                        />         
+                    </div>                    
+                    <!-- DATA FIM -->
+    
 
-                        />
-                        <ErrorMessage
-                            name="razaoSocial"
-                            component="div"
-                            class="form-control is-invalid text-danger"
-                        />
-                    </div>
-                    <!-- Nome Fantasia FIM -->
-
-
-                    
                     <div class="d-grid gap-2 col-6 mx-auto"
                     style="margin-top: 20px;">
                         <button @click="RegisterUser"
@@ -158,51 +150,46 @@
     import swal from 'sweetalert';
     import service from '../../service/controller'
     import{Form,Field,ErrorMessage, validate} from 'vee-validate'
+
+
     export default{
 
 /*   OBJECT CADASTRO
 {
-    "nomeUsuario": "nomeTeste888",
-    "email":"teste22@teste87w37.com",
-    "tipo": "PJ",
-    "saldo": 0.00,
-    "senha":"teste",
-    "role":[
-        {
-            "id": 1,
-            "permissao": "ROLE_ADMIN"
-        }
-        ],
-    "pessoaFisica":[],
-    "pessoaJuridica":[{
-        "nomeFantasia":"44",
-        "razaoSocial":"aa",
-        "cnpj":"13386640000123"
-    }]
+{
+  "email": "predri@gmail.com",
+  "senha": "alexnadre",
+  "role": [ { "id": 0, "permissao": "ROLE_ADMIN" } ],
+  "nomeUsuario": "alere souto",
+  "pessoaFisica":[ { 
+		"id": 0, 
+		"cpf": "18756678061",
+		"nome":"alexandresouto", 
+		"dataNascimento": "27/10/1988" 
+    }] 
+}
 }*/
-
         components:{Form,Field,ErrorMessage},
         name:'Register',
         data(){
             return{
                 formUser:{
-                        nomeUsuario: '',
                         email: '',
-                        tipo: 'PJ',
-                        saldo: '0.0',
                         senha: '',
                         role: [{
                             id: '1', 
                             permissao: 'ROLE_ADMIN' 
                         }],
-                        pessoaFisica: [],
-                        pessoaJuridica: [{ 
-                            nomeFantasia: '', 
-                            razaoSocial: '', 
-                            cnpj: ''
-                        }],
-                    }
-                };
+                        nomeUsuario:'',
+                        saldo: '0.0',
+                        pessoaFisica:[{ 
+                            id: 0, 
+                            cpf: '',
+                            nome:'', 
+                            dataNascimento:''
+                        }] 
+                }
+            };
         },
         methods:{
             submitRegister(){},
@@ -248,8 +235,15 @@
                 }
                 return 'A senha deve obter entre 3 e 8 caracters!'
                 
-            }
+            },            
+            validateCPF(value){
+            
+                //TODO VALIDAt  E CPF
 
+                
+            }
+            
         }
-}
+    }
+
 </script>
