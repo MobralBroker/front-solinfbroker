@@ -81,7 +81,6 @@
             }
         },
         methods:{
-           
             async loinUser(e){
                 e.preventDefault();
                 
