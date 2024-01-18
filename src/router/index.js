@@ -1,34 +1,32 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NProgress from 'nprogress'
 
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
       name: 'login',
-      component: ()=>import('../components/login/loginComponent')
+      component: () => import('../components/login/loginComponent')
     },
     {
       path: '/home',
       name: 'home',
-    
       component: () => import('../components/homePage/homeComponent'),
-      meta:{requireAuth:true}
+      meta: { requireAuth: true }
     },
     {
       path: '/register',
       name: 'register',
-      
       component: () => import('../components/register/registerComponent')
     },
     {
       path: '/panel',
       name: 'panel',
-
-      component: () => import('../components/panel/StockPanel.vue')
+      component: () => import('../components/panel/StockPanel.vue'),
+      meta: { requireAuth: true }
     },
+<<<<<<< HEAD
     {
       path: '/wallet',
       name: 'wallet',
@@ -36,15 +34,17 @@ const router = createRouter({
       component: () => import('../components/panel/walletPanel.vue')
     },
 
+=======
+>>>>>>> 60aa744 (Alteração em API.js e Controller.js -- configurado para aceitar conexão de outras API)
   ]
 })
 
 router.beforeEach((to, from, next) => {
- // next()
-  if (to.matched.some((record) => record.meta.requireAuth)) {
-    if (localStorage.getItem('token') == null) {
+  if (to.matched.some(record => record.meta.requireAuth)) {
+    if (!localStorage.getItem('token')) {
       next({
         path: '/',
+        query: { redirect: to.fullPath } // Passa a rota original como parâmetro de consulta
       });
     } else {
       next();
@@ -54,15 +54,16 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-
-router.beforeResolve((to,from,next)=>{
-  if(to.name){
+router.beforeResolve((to, from, next) => {
+  if (to.name) {
     NProgress.start()
   }
   next()
 })
-router.afterEach((to,from)=>{
+
+router.afterEach((to, from) => {
   NProgress.done()
 })
 
 export default router
+
