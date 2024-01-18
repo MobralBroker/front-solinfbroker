@@ -1,60 +1,70 @@
 <template>
     <div class="dashboard-container">
-    
-    <!-- Painel Latera -->
-        <asside class="sidebar">
+
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="../../assets/img/solinftec.png" alt="Logo">
+            </div>
             <ul>
-                <li><a @click="navigateTo('Investimentos')">Investimentos</a></li>
-                <li><a @click="navigateTo('Book')">Book</a></li> 
-                <li><a @click="navigateTo('Carteira')">Carteira</a></li>
+                <li><a><router-link to="/dashboard">📊 Dashboard</router-link></a></li>
+                <li><a><router-link to="/book">📄 Book</router-link></a></li>
+                <li class="active"><a><router-link to="/panel">💹 Investimentos</router-link></a></li>
+                <li><a><router-link to="/wallet">💸 Carteira</router-link></a></li>
+                <li><a><router-link to="/panel" style="color: red;">🚪 Sair</router-link></a></li>
             </ul>
-        </asside>
+        </aside>
         <main>
-                <h2>Painel de Investimentos</h2>
+
+            <h2>💹 Painel de Investimentos</h2>
 
             <!-- Seção de Compra -->
-            <section>
-                <h3>Compra de Ações</h3>
-                <div>
-                    <label for="stockSymbol">Símbolo da Ação:</label>
-                    <input type="text" id="stockSymbol" v-model="buy.stockSymbol" />
+            <div class="sections-container">
 
-                    <label for="quantity">Quantidade:</label>
-                    <input type="number" id="quantity" v-model="buy.quantity" />
+                <!-- Seção de Compra -->
+                <section class="section">
+                    <h3 class="hsection">Compra de Ações</h3>
+                    <div>
+                        <label for="stockSymbol">Símbolo da Ação:</label>
+                        <input type="text" id="stockSymbol" v-model="buy.stockSymbol" />
 
-                    <label for="price">Preço:</label>
-                    <input type="number" id="price" v-model="buy.price" />
+                        <label for="quantity">Quantidade:</label>
+                        <input type="number" id="quantity" v-model="buy.quantity" />
 
-                    <button @click="buyStock">Comprar Ações</button>
-                </div>
-            </section>
+                        <label for="price">Preço:</label>
+                        <input type="number" id="price" v-model="buy.price" />
 
-            <!-- Seção de Venda -->
-            <section>
-                <h3>Venda de Ações</h3>
-                <div>
-                <label for="sellStockSymbol">Símbolo da Ação:</label>
-                <input type="text" id="sellStockSymbol" v-model="sell.stockSymbol" />
+                        <button class="buttonComprar" @click="buyStock">Comprar Ações</button>
+                    </div>
+                </section>
 
-                <label for="sellQuantity">Quantidade:</label>
-                <input type="number" id="sellQuantity" v-model="sell.quantity" />
+                <!-- Seção de Venda -->
+                <section class="section">
+                    <h3 class="hsection">Venda de Ações</h3>
+                    <div>
+                        <label for="sellStockSymbol">Símbolo da Ação:</label>
+                        <input type="text" id="sellStockSymbol" v-model="sell.stockSymbol" />
 
-                <label for="sellPrice">Preço:</label>
-                <input type="number" id="sellPrice" v-model="sell.price" />
+                        <label for="sellQuantity">Quantidade:</label>
+                        <input type="number" id="sellQuantity" v-model="sell.quantity" />
 
-                <button @click="sellStock">Vender Ações</button>
-              </div>
-            </section>
+                        <label for="sellPrice">Preço:</label>
+                        <input type="number" id="sellPrice" v-model="sell.price" />
 
-             <!-- Lista de Ações Possuídas -->
+                        <button class="buttonComprar" @click="sellStock">Vender Ações</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Lista de Ações Possuídas -->
             <section v-if="ownedStocks.length > 0">
                 <h3>Ações Possuídas</h3>
                 <ul>
                     <li v-for="(stock, index) in ownedStocks" :key="index">
-                    {{ stock.symbol }} - Quantidade: {{ stock.quantity }} - Preço Médio: {{ stock.avgPrice }}
+                        {{ stock.symbol }} - Quantidade: {{ stock.quantity }} - Preço Médio: {{ stock.avgPrice }}
                     </li>
                 </ul>
             </section>
+
         </main>
     </div>
 </template>
@@ -140,72 +150,145 @@ export default {
 </script>
 
 
-<style scoped>
-    html, body {
-        height: 100%;
-        margin: 0;
-    }
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('../../assets/img/white.png');
+    background-size: cover;
+    background-position: center;
+}
 
-    body {
-        background-image: url('../../assets/img/white.png');
-        background-size: cover;
-        background-position: center;
-        font-family: Arial, sans-serif;
-    }
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
 
-    .dashboard-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
+.logo {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 25px;
+}
 
-    h2 {
-        color: #333;
-    }
+.logo img {
+    width: 100%;
+    margin-right: 10px;
+}
 
-    h3 {
-        color: #555;
-        margin-top: 20px;
-    }
+.sidebar {
+    background-color: #c4fabc;
+    width: 250px;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-    section {
-        margin-bottom: 20px;
-    }
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
 
-    label {
-        display: block;
-        margin-bottom: 5px;
-    }
+.sidebar ul li a {
+    display: block;
+    padding: 8px 16px;
+    color: #6c757d;
+    text-decoration: none;
+}
 
-    input {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-    }
+.sidebar ul li a:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
 
-    button {
-        background-color: #4caf50;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 4px;
-    }
+main {
+    flex-grow: 1;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-    li {
-        background-color: #eee;
-        padding: 10px;
-        margin-bottom: 5px;
-        border-radius: 4px;
-    }
+table th,
+table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+table th {
+    background-color: #f8f9fa;
+}
+
+.acoes-historico {
+    display: flex;
+    justify-content: space-around;
+}
+
+label,
+input,
+button {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input {
+    height: 60px;
+    font-size: 30px;
+}
+
+button {
+    background-color: #14a401;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.sections-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section {
+    width: 49%;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 50px;
+}
+
+section .hsection{
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+button.historico {
+    background-color: #6c757d;
+}
+
+button.historico:hover {
+    background-color: #5a6268;
+}
+
+section .buttonComprar{
+    margin: 0px;
+    margin-top: 25px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.sidebar li.active {
+    font-weight: bold;
+    background-color: #e9ecef;
+}
 </style>
-
