@@ -38,6 +38,8 @@
         </div>
 
         <div class="div1"> </div>
+        <button class="buttonComprar" @click="Order">Vender Ações</button>
+
         <div class="div2"> </div>
         <div class="div3"> </div>
         <div class="div4"> </div>
@@ -48,13 +50,23 @@
     </footer>
 </template>
 <script>
-  
+
+import service from '../../service/controller'
+import swal from 'sweetalert';
+
+
     export default{
         name:'Home',
+
         data(){
             return{
-                user:{
-                    
+                
+                sell: {
+                    idCliente: 1,
+                    idAtivo: 1,
+                    tipoOrdem: "ORDEM_VENDA",
+                    valorOrdem: 1.00,
+                    quantidadeOrdem: 1
                 }
             }
         },
@@ -70,6 +82,22 @@
             //     //this.user = tokenDecoded;
             // },
 
+
+          async Order(){
+                try {
+                    
+                    await service.sentOrder(this.sell);
+
+                // Atualizar a lista de ações possuídas
+                swal('Sucesso', 'Ações compradas com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao comprar ações:', error);
+                swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
+            }
+
+            
+            
+            },
             logOutUser(){
                 swal({
                     title: 'Você quer mesmo sair T.T ?',

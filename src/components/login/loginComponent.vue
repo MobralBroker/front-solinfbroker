@@ -90,11 +90,9 @@
                 }
                 try{
                     const token = await sevice.login(data)
+                    console.log(token)
+                    localStorage.setItem('token', token.token);
                     
-                    console.log("login ::: ",token)
-
-                    localStorage.setItem('token', token)
-
                     swal({
                         title: 'Sucesso!',
                         text: 'Usuário(a) logado com sucesso!',
