@@ -13,7 +13,7 @@ const router = createRouter({
       path: '/home',
       name: 'home',
       component: () => import('../components/homePage/homeComponent'),
-      meta: { requireAuth: true }
+      //meta: { requireAuth: true }
     },
     {
       path: '/register',
@@ -24,7 +24,7 @@ const router = createRouter({
       path: '/panel',
       name: 'panel',
       component: () => import('../components/panel/StockPanel.vue'),
-      meta: { requireAuth: true }
+      //meta: { requireAuth: true }
     },
 
     {

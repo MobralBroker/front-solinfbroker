@@ -5,14 +5,20 @@
             <div class="logo">
                 <img src="../../assets/img/solinftec.png" alt="Logo">
             </div>
+
+            <div class="dadosuser">
+                <div>👤 {{ usuario }}</div>
+                <div class="logout" @click="logout">(Sair)</div>
+            </div>
+
             <ul>
                 <li><a><router-link to="/dashboard">📊 Dashboard</router-link></a></li>
                 <li><a><router-link to="/book">📄 Book</router-link></a></li>
                 <li class="active"><a><router-link to="/panel">💹 Investimentos</router-link></a></li>
                 <li><a><router-link to="/wallet">💸 Carteira</router-link></a></li>
-                <li><a @click="logout">🚪 Sair</a></li>
             </ul>
         </aside>
+
         <main>
 
             <h2>💹 Painel de Investimentos</h2>
@@ -73,6 +79,7 @@
 export default {
     data() {
         return {
+            usuario: "José da Silva",
             buy: {
                 stockSymbol: "",
                 quantity: 0,
@@ -170,7 +177,7 @@ body {
 }
 
 .sidebar {
-    background-color: #c4fabc;
+    background-color: #f8f9fa;
     width: 250px;
     padding: 20px;
     box-sizing: border-box;
@@ -186,6 +193,7 @@ body {
     padding: 8px 16px;
     color: #6c757d;
     text-decoration: none;
+    border-radius: 5px;
 }
 
 .sidebar ul li a:hover {
@@ -282,5 +290,22 @@ section .buttonComprar {
 .sidebar li.active {
     font-weight: bold;
     background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+.dadosuser {
+    color: #fff;
+    background-color: #14a401;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    height: 90px;
+}
+
+.logout {
+    margin-left: 5px;
+    text-decoration: underline;
+    cursor: pointer;
 }
 </style>

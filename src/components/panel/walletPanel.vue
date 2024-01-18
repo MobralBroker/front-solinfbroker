@@ -5,12 +5,17 @@
             <div class="logo">
                 <img src="../../assets/img/solinftec.png" alt="Logo">
             </div>
+
+            <div class="dadosuser">
+                <div>👤 {{ usuario }}</div>
+                <div class="logout" @click="logout">(Sair)</div>
+            </div>
+
             <ul>
                 <li><a><router-link to="/dashboard">📊 Dashboard</router-link></a></li>
                 <li><a><router-link to="/book">📄 Book</router-link></a></li>
                 <li><a><router-link to="/panel">💹 Investimentos</router-link></a></li>
                 <li class="active"><a><router-link to="/wallet">💸 Carteira</router-link></a></li>
-                <li><a @click="logout">🚪 Sair</a></li>
             </ul>
         </aside>
 
@@ -77,6 +82,7 @@
 export default {
     data() {
         return {
+            usuario: "José da Silva",
             saldo: [
                 { saldo: '100,00' }
             ],
@@ -91,7 +97,13 @@ export default {
                 { ativo: 'ABC001', quantidade: '25', valorcompra: '25,35', datacompra: '10/12/1993' }
             ]
         };
-    }
+    },
+    methods: {
+        logout() {
+            localStorage.removeItem('token');
+            this.$router.push('/');
+        },
+    },
 };
 </script>
   
@@ -127,6 +139,7 @@ body {
     padding: 8px 16px;
     color: #6c757d;
     text-decoration: none;
+    border-radius: 5px;
 }
 
 .sidebar ul li a:hover {
@@ -197,6 +210,7 @@ button.historico:hover {
 }
 
 .sidebar li.active {
+    border-radius: 5px;
     font-weight: bold;
     background-color: #e9ecef;
 }
@@ -208,12 +222,28 @@ button.historico:hover {
     margin-bottom: 25px;
 }
 
+.dadosuser {
+    color: #fff;
+    background-color: #14a401;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    height: 90px;
+}
+
+.logout {
+    margin-left: 5px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .logo img {
     width: 100%;
     margin-right: 10px;
 }
 
-section{
+section {
     margin-bottom: 25px;
 }
 </style>
