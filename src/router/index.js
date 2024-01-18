@@ -29,6 +29,12 @@ const router = createRouter({
 
       component: () => import('../components/panel/StockPanel.vue')
     },
+    {
+      path: '/wallet',
+      name: 'wallet',
+
+      component: () => import('../components/panel/walletPanel.vue')
+    },
 
   ]
 })
