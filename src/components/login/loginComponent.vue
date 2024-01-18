@@ -10,7 +10,7 @@
 
                         <Form class=" border border-primary p-5"
                         style="margin-top: 70px;height: auto;padding-top: 100px;inportant;"
-                        @submit.prevent="loinUser(e)">
+                        @submit.prevent="loginUser(e)">
                         <div>
                             <label for="">Email</label>
                             <Field
@@ -41,7 +41,7 @@
                             />
                         </div>
                         <div class="d-grid gap-2 col-6 mx-auto">
-                            <button @click="loinUser"
+                            <button @click="loginUser"
                             class="btn btn-primary btn-custom my-2 ">
                             ENTRAR
                             </button>
@@ -81,8 +81,7 @@
             }
         },
         methods:{
-           
-            async loinUser(e){
+            async loginUser(e){
                 e.preventDefault();
                 
                 const data ={
@@ -101,7 +100,7 @@
                         text: 'Usuário(a) logado com sucesso!',
                         icon: 'success',
                     }).then(()=>{
-                        this.$router.push('/home')
+                        this.$router.push('/panel')
                     })
                 }
                 catch(err){

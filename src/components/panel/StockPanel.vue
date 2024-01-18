@@ -10,7 +10,7 @@
                 <li><a><router-link to="/book">📄 Book</router-link></a></li>
                 <li class="active"><a><router-link to="/panel">💹 Investimentos</router-link></a></li>
                 <li><a><router-link to="/wallet">💸 Carteira</router-link></a></li>
-                <li><a><router-link to="/panel" style="color: red;">🚪 Sair</router-link></a></li>
+                <li><a @click="logout">🚪 Sair</a></li>
             </ul>
         </aside>
         <main>
@@ -88,28 +88,23 @@ export default {
     },
     methods: {
         navigateTo(section) {
-            // Adicione a lógica de navegação aqui
             console.log(`Navigating to ${section}`);
         },
         buyStock() {
-            // Adicione a lógica para compra de ações aqui
             const { stockSymbol, quantity, price } = this.buy;
             const totalCost = quantity * price;
 
-            // Exemplo: Adicionar a lógica para verificar se o usuário tem fundos suficientes, etc.
             if (totalCost <= 0) {
                 console.error("Invalid purchase details.");
                 return;
             }
 
-            // Exemplo: Adicionar a lógica para adicionar a ação à lista de ações possuídas
             this.ownedStocks.push({
                 symbol: stockSymbol,
                 quantity,
                 avgPrice: totalCost / quantity,
             });
 
-            // Limpar campos após a compra
             this.buy = {
                 stockSymbol: "",
                 quantity: 0,
@@ -117,38 +112,35 @@ export default {
             };
         },
         sellStock() {
-            // Adicione a lógica para venda de ações aqui
             const { stockSymbol, quantity, price } = this.sell;
 
-            // Exemplo: Adicionar a lógica para verificar se o usuário possui essas ações, etc.
             const stockIndex = this.ownedStocks.findIndex(stock => stock.symbol === stockSymbol);
             if (stockIndex === -1 || this.ownedStocks[stockIndex].quantity < quantity) {
                 console.error("Invalid sell details.");
                 return;
             }
 
-            // Exemplo: Adicionar a lógica para calcular o lucro, etc.
             const profit = quantity * (price - this.ownedStocks[stockIndex].avgPrice);
 
-            // Exemplo: Adicionar a lógica para remover a quantidade vendida das ações possuídas
             this.ownedStocks[stockIndex].quantity -= quantity;
 
-            // Exemplo: Adicionar a lógica para remover completamente a ação se a quantidade for zero
             if (this.ownedStocks[stockIndex].quantity === 0) {
                 this.ownedStocks.splice(stockIndex, 1);
             }
 
-            // Limpar campos após a venda
             this.sell = {
                 stockSymbol: "",
                 quantity: 0,
                 price: 0,
             };
         },
+        logout() {
+            localStorage.removeItem('token');
+            this.$router.push('/');
+        },
     },
 };
 </script>
-
 
 <style>
 body {
@@ -266,7 +258,7 @@ button {
     padding: 50px;
 }
 
-section .hsection{
+section .hsection {
     text-align: center;
     margin-bottom: 40px;
     font-weight: bold;
@@ -280,7 +272,7 @@ button.historico:hover {
     background-color: #5a6268;
 }
 
-section .buttonComprar{
+section .buttonComprar {
     margin: 0px;
     margin-top: 25px;
     font-size: 20px;

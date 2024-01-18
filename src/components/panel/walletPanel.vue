@@ -10,7 +10,7 @@
                 <li><a><router-link to="/book">📄 Book</router-link></a></li>
                 <li><a><router-link to="/panel">💹 Investimentos</router-link></a></li>
                 <li class="active"><a><router-link to="/wallet">💸 Carteira</router-link></a></li>
-                <li><a class="logout"><router-link to="/panel" style="color: red;">🚪 Sair</router-link></a></li>
+                <li><a @click="logout">🚪 Sair</a></li>
             </ul>
         </aside>
 
