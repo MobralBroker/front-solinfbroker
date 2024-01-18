@@ -26,7 +26,6 @@ const router = createRouter({
       component: () => import('../components/panel/StockPanel.vue'),
       meta: { requireAuth: true }
     },
-<<<<<<< HEAD
     {
       path: '/wallet',
       name: 'wallet',
@@ -34,8 +33,6 @@ const router = createRouter({
       component: () => import('../components/panel/walletPanel.vue')
     },
 
-=======
->>>>>>> 60aa744 (Alteração em API.js e Controller.js -- configurado para aceitar conexão de outras API)
   ]
 })
 

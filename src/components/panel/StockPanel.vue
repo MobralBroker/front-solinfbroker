@@ -15,7 +15,7 @@
       <section>
         <h3>Compra de Ações</h3>
         <div>
-          <label for="stockSymbol">Símbolo da Ação:</label>
+          <label for="stockSymbol">Ativo:</label>
           <input type="text" id="stockSymbol" v-model="buy.stockSymbol" />
 
           <label for="quantity">Quantidade:</label>
@@ -32,7 +32,7 @@
       <section>
         <h3>Venda de Ações</h3>
         <div>
-          <label for="sellStockSymbol">Símbolo da Ação:</label>
+          <label for="sellStockSymbol">Ativo:</label>
           <input type="text" id="sellStockSymbol" v-model="sell.stockSymbol" />
 
           <label for="sellQuantity">Quantidade:</label>
@@ -62,16 +62,19 @@
 </template>
 
 <script>
+import ordemController from '../../service/ordemController';
+import swal from 'sweetalert';
+
 export default {
   data() {
     return {
       buy: {
-        stockSymbol: "",
+        stockSymbol: '',
         quantity: 0,
         price: 0,
       },
       sell: {
-        stockSymbol: "",
+        stockSymbol: '',
         quantity: 0,
         price: 0,
       },
@@ -79,49 +82,63 @@ export default {
     };
   },
   methods: {
-    navigateTo(section) {
-      console.log(`Navigating to ${section}`);
-    },
-    buyStock() {
+    async buyStock() {
       const { stockSymbol, quantity, price } = this.buy;
-      const totalCost = quantity * price;
 
-      if (totalCost <= 0) {
-        console.error("Invalid purchase details.");
+      if (!stockSymbol || quantity <= 0 || price <= 0) {
+        console.error('Detalhes de compra inválidos.');
+        swal('Erro', 'Detalhes de compra inválidos.', 'error');
         return;
       }
 
-      this.ownedStocks.push({
-        symbol: stockSymbol,
-        quantity,
-        avgPrice: totalCost / quantity,
-      });
+      try {
+        await ordemController.criarOrdemCompra({
+          symbol: stockSymbol,
+          quantity,
+          price,
+        });
+
+        // Atualizar a lista de ações possuídas
+        this.updateOwnedStocks();
+        swal('Sucesso', 'Ações compradas com sucesso!', 'success');
+      } catch (error) {
+        console.error('Erro ao comprar ações:', error);
+        swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
+      }
 
       this.buy = {
-        stockSymbol: "",
+        stockSymbol: '',
         quantity: 0,
         price: 0,
       };
     },
-    sellStock() {
+
+    async sellStock() {
       const { stockSymbol, quantity, price } = this.sell;
 
-      const stockIndex = this.ownedStocks.findIndex(stock => stock.symbol === stockSymbol);
-      if (stockIndex === -1 || this.ownedStocks[stockIndex].quantity < quantity) {
-        console.error("Invalid sell details.");
+      if (!stockSymbol || quantity <= 0 || price <= 0) {
+        console.error('Detalhes de venda inválidos.');
+        swal('Erro', 'Detalhes de venda inválidos.', 'error');
         return;
       }
 
-      const profit = quantity * (price - this.ownedStocks[stockIndex].avgPrice);
+      try {
+        await ordemController.criarOrdemVenda({
+          symbol: stockSymbol,
+          quantity,
+          price,
+        });
 
-      this.ownedStocks[stockIndex].quantity -= quantity;
-
-      if (this.ownedStocks[stockIndex].quantity === 0) {
-        this.ownedStocks.splice(stockIndex, 1);
+        // Atualizar a lista de ações possuídas
+        this.updateOwnedStocks();
+        swal('Sucesso', 'Ações vendidas com sucesso!', 'success');
+      } catch (error) {
+        console.error('Erro ao vender ações:', error);
+        swal('Erro', 'Ocorreu um erro ao vender ações', 'error');
       }
 
       this.sell = {
-        stockSymbol: "",
+        stockSymbol: '',
         quantity: 0,
         price: 0,
       };
