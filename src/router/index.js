@@ -26,7 +26,6 @@ const router = createRouter({
       component: () => import('../components/panel/StockPanel.vue'),
       //meta: { requireAuth: true }
     },
-
     {
       path: '/wallet',
       name: 'wallet',

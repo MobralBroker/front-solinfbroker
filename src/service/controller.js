@@ -1,6 +1,6 @@
 
 // import API from "./api"
-import { authenticationApi, crudApi } from './api';
+import { authenticationApi } from './api';
 
 export default{
     async register(data){
