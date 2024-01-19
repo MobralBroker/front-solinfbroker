@@ -60,14 +60,14 @@ import swal from 'sweetalert';
 
         data(){
             return{
-                
                 sell: {
-                    idCliente: 1,
-                    idAtivo: 1,
-                    tipoOrdem: "ORDEM_VENDA",
-                    valorOrdem: 1.00,
-                    quantidadeOrdem: 1
+                        idCliente: 1,
+                        idAtivo: 1,
+                        tipoOrdem: "ORDEM_VENDA",
+                        valorOrdem: 1,
+                        quantidadeOrdem: 1
                 }
+                
             }
         },
         methods:{
@@ -85,15 +85,12 @@ import swal from 'sweetalert';
 
           async Order(){
                 try {
-                    
                     await service.sentOrder(this.sell);
-
-                // Atualizar a lista de ações possuídas
-                swal('Sucesso', 'Ações compradas com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao comprar ações:', error);
-                swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
-            }
+                    swal('Sucesso', 'Ações compradas com sucesso!', 'success');
+                    } catch (error) {
+                        console.error('Erro ao comprar ações:', error);
+                        swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
+                    }
 
             
             

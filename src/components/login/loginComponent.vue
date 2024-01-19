@@ -90,7 +90,6 @@
                 }
                 try{
                     const token = await sevice.login(data)
-                    console.log(token)
                     localStorage.setItem('token', token.token);
                     
                     swal({
