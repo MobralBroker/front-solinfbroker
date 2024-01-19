@@ -1,68 +1,78 @@
 <template>
-    <div>
-        <div class="login-page">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 offset-lg-3 col-sm-10 offset-sm-1">
-                        <div class="container text-center">
-                            <img src="../../assets/img/solinftec.png" alt="Logotipo" class="logo-img">
+  <div class="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
+    <CContainer>
+      <CRow class="justify-content-center">
+        <CCol :md="8">
+          <CCardGroup>
+            <CCard class="p-4">
+              <CCardBody>
+                <CForm>
+                  <div class="container">
+                            <img src="../../assets/img/logo.png" alt="Logotipo" width="120" class="logo-img">
                         </div>
+                  <h1>Solinfbroker</h1>
+                  <p class="text-body-secondary">Acesse sua conta </p>
+                  <CInputGroup class="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon="cil-user" />
+                    </CInputGroupText>
 
-                        <Form class=" border border-primary p-5"
-                        style="margin-top: 70px;height: auto;padding-top: 100px;inportant;"
-                        @submit.prevent="loinUser(e)">
-                        <div>
-                            <label for="">Email</label>
-                            <Field
-                                type="email"
+                    <CFormInput
+                    type="email"
                                 id="emai"
                                 name="email"
-                                class="form-control mb-2"
                                 placeholder="digite seu email"
                                 :rules="validateEmail"
                                 v-model="email"
-                            />
-                            <ErrorMessage name="email" 
-                            class="form-control is-invalid text-danger"/>
-                        </div>
-                        <div>
-                            <label for="">Password</label>
-                            <Field
-                            type="password"
+                    />
+
+                  </CInputGroup>
+                  <CInputGroup class="mb-4">
+                    <CInputGroupText>
+                      <CIcon icon="cil-lock-locked" />
+                    </CInputGroupText>
+
+                    <CFormInput
+                    type="password"
                             id="password"
                             name="password"
-                            class="form-control mb-2"
                             placeholder="Digite sua senha"
                             :rules="validate"
                             v-model="senha"
-                            />
-                            <ErrorMessage name="password"
-                            class="form-control is-invalid text-danger"
-                            />
-                        </div>
-                        <div class="d-grid gap-2 col-6 mx-auto">
-                            <button @click="loinUser"
-                            class="btn btn-primary btn-custom my-2 ">
-                            ENTRAR
-                            </button>
-                        </div>
+                    />
 
-                        <p class="text-center my-2"> 
-                            <router-link
-                                to="/register"
-                                style="color:black;">
-                                Crie sua conta agora!
-                            </router-link>
-                        </p>
 
-                        </form>
-                    </div>
+                  </CInputGroup>
+                  <CRow>
+                    <CCol :xs="6">
+                      <CButton color="primary" class="px-4"  @click="loinUser"> Login </CButton>
+                    </CCol>
+                    
+                  </CRow>
+                </CForm>
+              </CCardBody>
+            </CCard>
+            <CCard class="text-white bg-primary py-5" style="width: 44%">
+              <CCardBody class="text-center">
+                <div>
+                  <h2>Registre-se</h2>
+                  <p>
+                    Abra já sua conta!
+                  </p>
+                  <CButton color="light"   @click="toRegistro()"  variant="outline" class="mt-3">
+                    Cadastre-se
+                  </CButton>
 
                 </div>
-            </div>
-        </div>
-    </div>
+              </CCardBody>
+            </CCard>
+          </CCardGroup>
+        </CCol>
+      </CRow>
+    </CContainer>
+  </div>
 </template>
+
 <script>
     import swal from 'sweetalert'
     import sevice from '../../service/controller'
@@ -107,6 +117,9 @@
                         icon: 'error',
                     })
                 }
+            },
+            toRegistro() {
+              this.$router.push('/register');
             },
             validateEmail(value) {
       

@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NProgress from 'nprogress'
 
+import DefaultLayout from '@/layouts/DefaultLayout'
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -8,48 +10,54 @@ const router = createRouter({
     {
       path: '/',
       name: 'login',
-      component: ()=>import('../components/login/loginComponent')
+      component: ()=>import('../views/login/Login.vue')
     },
     {
       path: '/home',
       name: 'home',
-    
-      component: () => import('../components/homePage/homeComponent'),
-      meta:{requireAuth:true}
+      component: DefaultLayout,      
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('../views/dashboard/Dashboard.vue'),
+          meta: { requireAuth: true }
+        }
+      ]
     },
     {
       path: '/register',
       name: 'register',
       
-      component: () => import('../components/register/registerComponent')
+      component: () => import('../views/register/Register.vue')
     },
   ]
 })
 
-router.beforeEach((to, from, next) => {
- // next()
-  if (to.matched.some((record) => record.meta.requireAuth)) {
-    if (localStorage.getItem('token') == null) {
-      next({
-        path: '/',
-      });
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-});
-
-
-router.beforeResolve((to,from,next)=>{
-  if(to.name){
-    NProgress.start()
-  }
-  next()
-})
-router.afterEach((to,from)=>{
-  NProgress.done()
-})
-
-export default router
+  router.beforeEach((to, from, next) => {
+    // next()
+     if (to.matched.some((record) => record.meta.requireAuth)) {
+       if (localStorage.getItem('token') == null) {
+         next({
+           path: '/',
+         });
+       } else {
+         next();
+       }
+     } else {
+       next();
+     }
+   });
+   
+   
+   router.beforeResolve((to,from,next)=>{
+     if(to.name){
+       NProgress.start()
+     }
+     next()
+   })
+   router.afterEach((to,from)=>{
+     NProgress.done()
+   })
+   
+   export default router
