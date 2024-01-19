@@ -1,79 +1,79 @@
 <template>
-    <div class="dashboard-container">
+  <div class="dashboard-container">
 
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="../../assets/img/solinftec.png" alt="Logo">
-            </div>
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="../../assets/img/solinftec.png" alt="Logo">
+      </div>
 
-            <div class="dadosuser">
-                <div>👤 {{ usuario }}</div>
-                <div class="logout" @click="logout">(Sair)</div>
-            </div>
+      <div class="dadosuser">
+        <div>👤 {{ usuario }}</div>
+        <div class="logout" @click="logout">(Sair)</div>
+      </div>
 
-            <ul>
-                <li><a><router-link to="/dashboard">📊 Dashboard</router-link></a></li>
-                <li><a><router-link to="/book">📄 Book</router-link></a></li>
-                <li class="active"><a><router-link to="/panel">💹 Investimentos</router-link></a></li>
-                <li><a><router-link to="/wallet">💸 Carteira</router-link></a></li>
-            </ul>
-        </aside>
+      <ul>
+        <li><a><router-link to="/dashboard">📊 Dashboard</router-link></a></li>
+        <li><a><router-link to="/book">📄 Book</router-link></a></li>
+        <li class="active"><a><router-link to="/panel">💹 Investimentos</router-link></a></li>
+        <li><a><router-link to="/wallet">💸 Carteira</router-link></a></li>
+      </ul>
+    </aside>
 
-        <main>
+    <main>
+      <h2>💹 Painel de Investimentos</h2>
 
-            <h2>💹 Painel de Investimentos</h2>
+      <!-- Seção de Compra -->
+      <div class="sections-container">
 
-            <!-- Seção de Compra -->
-            <div class="sections-container">
+        <!-- Seção de Compra -->
+        <section class="section">
+          <h3 class="hsection">Compra de Ações</h3>
+          <div>
+            <label for="stockSymbol">Ativos:</label>
+            <input type="text" id="stockSymbol" v-model="buy.stockSymbol" />
+            <!-- Adicionando um botão para buscar detalhes do ativo -->
+            <button @click="getDetalhesAtivo">Buscar Detalhes</button>
 
-                <!-- Seção de Compra -->
-                <section class="section">
-                    <h3 class="hsection">Compra de Ações</h3>
-                    <div>
-                        <label for="stockSymbol">Símbolo da Ação:</label>
-                        <input type="text" id="stockSymbol" v-model="buy.stockSymbol" />
+            <label for="quantity">Quantidade:</label>
+            <input type="number" id="quantity" v-model="buy.quantity" />
 
-                        <label for="quantity">Quantidade:</label>
-                        <input type="number" id="quantity" v-model="buy.quantity" />
+            <label for="price">Preço:</label>
+            <input type="number" id="price" v-model="buy.price" />
 
-                        <label for="price">Preço:</label>
-                        <input type="number" id="price" v-model="buy.price" />
+            <button class="buttonComprar" @click="buyStock">Comprar Ações</button>
+          </div>
+        </section>
 
-                        <button class="buttonComprar" @click="buyStock">Comprar Ações</button>
-                    </div>
-                </section>
+        <!-- Seção de Venda -->
+        <section class="section">
+          <h3 class="hsection">Venda de Ações</h3>
+          <div>
+            <label for="sellStockSymbol">Ativos:</label>
+            <input type="text" id="sellStockSymbol" v-model="sell.stockSymbol" />
 
-                <!-- Seção de Venda -->
-                <section class="section">
-                    <h3 class="hsection">Venda de Ações</h3>
-                    <div>
-                        <label for="sellStockSymbol">Símbolo da Ação:</label>
-                        <input type="text" id="sellStockSymbol" v-model="sell.stockSymbol" />
+            <label for="sellQuantity">Quantidade:</label>
+            <input type="number" id="sellQuantity" v-model="sell.quantity" />
 
-                        <label for="sellQuantity">Quantidade:</label>
-                        <input type="number" id="sellQuantity" v-model="sell.quantity" />
+            <label for="sellPrice">Preço:</label>
+            <input type="number" id="sellPrice" v-model="sell.price" />
 
-                        <label for="sellPrice">Preço:</label>
-                        <input type="number" id="sellPrice" v-model="sell.price" />
+            <button class="buttonComprar" @click="sellStock">Vender Ações</button>
+          </div>
+        </section>
+      </div>
 
-                        <button class="buttonComprar" @click="sellStock">Vender Ações</button>
-                    </div>
-                </section>
-            </div>
+      <!-- Lista de Ações Possuídas -->
+      <section v-if="ownedStocks.length > 0">
+        <h3>Ações Possuídas</h3>
+        <ul>
+          <li v-for="(stock, index) in ownedStocks" :key="index">
+            {{ stock.symbol }} - Quantidade: {{ stock.quantity }} - Preço Médio: {{ stock.avgPrice }}
+          </li>
+        </ul>
+      </section>
 
-            <!-- Lista de Ações Possuídas -->
-            <section v-if="ownedStocks.length > 0">
-                <h3>Ações Possuídas</h3>
-                <ul>
-                    <li v-for="(stock, index) in ownedStocks" :key="index">
-                        {{ stock.symbol }} - Quantidade: {{ stock.quantity }} - Preço Médio: {{ stock.avgPrice
-                        }}
-                    </li>
-                </ul>
-            </section>
-
-        </main>
-    </div>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -81,88 +81,111 @@ import ordemController from '../../service/ordemController';
 import swal from 'sweetalert';
 
 export default {
-    data() {
-        return {
-            buy: {
-                stockSymbol: '',
-                quantity: 0,
-                price: 0,
-            },
-            sell: {
-                stockSymbol: '',
-                quantity: 0,
-                price: 0,
-            },
-            ownedStocks: [],
-        };
+  data() {
+    return {
+      buy: {
+        stockSymbol: '',
+        quantity: 0,
+        price: 0,
+      },
+      sell: {
+        stockSymbol: '',
+        quantity: 0,
+        price: 0,
+      },
+      ownedStocks: [],
+      detalhesAtivo: null, 
+    };
+  },
+
+  methods: {
+    async getDetalhesAtivo(symbol) {
+      try {
+        const detalhesAtivo = await ordemController.getDetalhesAtivo(symbol);
+
+        // Armazenar os detalhes do ativo para referência posterior
+        this.detalhesAtivo = detalhesAtivo;
+
+        console.log('Detalhes do Ativo:', detalhesAtivo);
+      } catch (error) {
+        console.error('Erro ao obter detalhes do ativo:', error);
+        swal('Erro', 'Erro ao obter detalhes do ativo.', 'error');
+      }
     },
-    methods: {
-        async buyStock() {
-            const { stockSymbol, quantity, price } = this.buy;
 
-            if (!stockSymbol || quantity <= 0 || price <= 0) {
-                console.error('Detalhes de compra inválidos.');
-                swal('Erro', 'Detalhes de compra inválidos.', 'error');
-                return;
-            }
+    async buyStock() {
+      const { stockSymbol, quantity, price } = this.buy;
 
-            try {
-                await ordemController.criarOrdemCompra({
-                    symbol: stockSymbol,
-                    quantity,
-                    price,
-                });
+      if (!stockSymbol || quantity <= 0 || price <= 0) {
+        console.error('Detalhes de compra inválidos.');
+        swal('Erro', 'Detalhes de compra inválidos.', 'error');
+        return;
+      }
 
-                // Atualizar a lista de ações possuídas
-                this.updateOwnedStocks();
-                swal('Sucesso', 'Ações compradas com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao comprar ações:', error);
-                swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
-            }
+      try {
+        // Verificar se os detalhes do ativo foram obtidos
+        if (!this.detalhesAtivo) {
+          await this.getDetalhesAtivo(stockSymbol);
+        }
 
-            this.buy = {
-                stockSymbol: '',
-                quantity: 0,
-                price: 0,
-            };
-        },
+        // Usar os detalhes do ativo para criar a ordem de compra
+        await ordemController.criarOrdemCompra({
+          symbol: stockSymbol,
+          quantity,
+          price,
+          detalhesAtivo: this.detalhesAtivo, // Passar os detalhes do ativo para o serviço
+        });
 
-        async sellStock() {
-            const { stockSymbol, quantity, price } = this.sell;
+        // Atualizar a lista de ações possuídas
+        this.updateOwnedStocks();
+        swal('Sucesso', 'Ações compradas com sucesso!', 'success');
+      } catch (error) {
+        console.error('Erro ao comprar ações:', error);
+        swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
+      }
 
-            if (!stockSymbol || quantity <= 0 || price <= 0) {
-                console.error('Detalhes de venda inválidos.');
-                swal('Erro', 'Detalhes de venda inválidos.', 'error');
-                return;
-            }
-
-            try {
-                await ordemController.criarOrdemVenda({
-                    symbol: stockSymbol,
-                    quantity,
-                    price,
-                });
-
-                // Atualizar a lista de ações possuídas
-                this.updateOwnedStocks();
-                swal('Sucesso', 'Ações vendidas com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao vender ações:', error);
-                swal('Erro', 'Ocorreu um erro ao vender ações', 'error');
-            }
-
-            this.sell = {
-                stockSymbol: '',
-                quantity: 0,
-                price: 0,
-            };
-        },
-        logout() {
-            localStorage.removeItem('token');
-            this.$router.push('/');
-        },
+      this.buy = {
+        stockSymbol: '',
+        quantity: 0,
+        price: 0,
+      };
     },
+
+    // async sellStock() {
+    //   const { stockSymbol, quantity, price } = this.sell;
+
+    //   if (!stockSymbol || quantity <= 0 || price <= 0) {
+    //     console.error('Detalhes de venda inválidos.');
+    //     swal('Erro', 'Detalhes de venda inválidos.', 'error');
+    //     return;
+    //   }
+
+    //   try {
+    //     await ordemController.criarOrdemVenda({
+    //       symbol: stockSymbol,
+    //       quantity,
+    //       price,
+    //     });
+
+    //     // Atualizar a lista de ações possuídas
+    //     this.updateOwnedStocks();
+    //     swal('Sucesso', 'Ações vendidas com sucesso!', 'success');
+    //   } catch (error) {
+    //     console.error('Erro ao vender ações:', error);
+    //     swal('Erro', 'Ocorreu um erro ao vender ações', 'error');
+    //   }
+
+    //   this.sell = {
+    //     stockSymbol: '',
+    //     quantity: 0,
+    //     price: 0,
+    //   };
+    // },
+    // logout() {
+    //   localStorage.removeItem('token');
+    //   this.$router.push('/');
+    // },
+  },
 };
 </script>
 

@@ -2,50 +2,58 @@
 
 import { crudApi } from './api';
 
-const criarOrdem = async (ordem) => {
-  try {
-    const response = await crudApi.post('/ordens', ordem);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao criar ordem:', error);
-    throw error;
-  }
+const ordemController = {
+  listarOrdem: async () => {
+    try {
+      const response = await crudApi.get('/ordem');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao listar ordens:', error);
+      throw error;
+    }
+  },
+
+  buscarOrdem: async (id) => {
+    try {
+      const response = await crudApi.get(`/ordem/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Erro ao buscar ordem ${id}:`, error);
+      throw error;
+    }
+  },
+
+  criarOrdem: async (ordem) => {
+    try {
+      const response = await crudApi.post('/ordem', ordem);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao criar ordem:', error);
+      throw error;
+    }
+  },
+
+  cancelarOrdem: async (id, ordem) => {
+    try {
+      const response = await crudApi.put(`/ordem/cancelar-ordem/${id}`, ordem);
+      return response.data;
+    } catch (error) {
+      console.error(`Erro ao cancelar ordem ${id}:`, error);
+      throw error;
+    }
+  },
+
+  getDetalhesAtivo: async (symbol) => {
+    try {
+      const response = await crudApi.get(`/ativo/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Erro ao buscar detalhes do ativo ${id}:`, error);
+      throw error;
+    }
+  },
+
 };
 
-const obterOrdens = async () => {
-  try {
-    const response = await crudApi.get('/ordens');
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao obter ordens:', error);
-    throw error;
-  }
-};
-
-const criarOrdemCompra = async (ordemCompra) => {
-  try {
-    const response = await crudApi.post('/ordens/compra', ordemCompra);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao criar ordem de compra:', error);
-    throw error;
-  }
-};
-
-const criarOrdemVenda = async (ordemVenda) => {
-  try {
-    const response = await crudApi.post('/ordens/venda', ordemVenda);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao criar ordem de venda:', error);
-    throw error;
-  }
-};
-
-export default {
-  criarOrdem,
-  obterOrdens,
-  criarOrdemCompra,
-  criarOrdemVenda,
-};
+export default ordemController;
 

@@ -63,6 +63,7 @@
         </div>
     </div>
 </template>
+
 <script>
     import swal from 'sweetalert'
     import sevice from '../../service/controller'
