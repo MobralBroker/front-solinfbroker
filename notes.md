@@ -6,6 +6,10 @@
 #### const authenticationApi = axios.create({ baseURL: 'localhost:8080' });
 #### const crudApi = axios.create({ baseURL: 'localhost:8081' });
 
+#### adicionado arquivo Dockerfile para aplicação, em fase de construção.
 
-#### FIX
+#### FIX * PENDENCIA
 --> Logica de Post | Get na tela Painel de investimentos sem funcionar! Validar comunicação com API CRUD
+
+
+
