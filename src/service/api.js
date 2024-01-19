@@ -13,6 +13,6 @@ import axios from 'axios';
 // const authenticationApi = axios.create({ baseURL: 'https://8e01-2804-14c-4583-20a2-1cfa-7c62-493d-6c48.ngrok-free.app' });
 // const crudApi = axios.create({ baseURL: 'https://cqidt9eivj.loclx.io' });
 const authenticationApi = axios.create({ baseURL: 'http://localhost:8080' });
-const crudApi = axios.create({ baseURL: 'https://localhost:8081' });
+const crudApi = axios.create({ baseURL: 'http://localhost:8081' });
 
 export { authenticationApi, crudApi };

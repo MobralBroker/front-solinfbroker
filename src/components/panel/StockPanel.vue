@@ -21,18 +21,19 @@
 
     <main>
       <h2>💹 Painel de Investimentos</h2>
-
-      <!-- Seção de Compra -->
-      <div class="sections-container">
-
+      <div>
         <!-- Seção de Compra -->
         <section class="section">
           <h3 class="hsection">Compra de Ações</h3>
           <div>
-            <label for="stockSymbol">Ativos:</label>
-            <input type="text" id="stockSymbol" v-model="buy.stockSymbol" />
-            <!-- Adicionando um botão para buscar detalhes do ativo -->
-            <button @click="getDetalhesAtivo">Buscar Detalhes</button>
+            <!-- Campo de entrada para o ID -->
+            <input v-model="idDoAtivo" placeholder="Insira o ID do Ativo" />
+            <button @click="getDetalhesAtivo(idDoAtivo)">Buscar Detalhes</button>
+
+            <div v-if="detalhesAtivo">
+              <h2>Detalhes do Ativo</h2>
+              <pre>{{ detalhesAtivo }}</pre>
+            </div>
 
             <label for="quantity">Quantidade:</label>
             <input type="number" id="quantity" v-model="buy.quantity" />
@@ -41,16 +42,13 @@
             <input type="number" id="price" v-model="buy.price" />
 
             <button class="buttonComprar" @click="buyStock">Comprar Ações</button>
-          </div>
-        </section>
+        </div>
+      </section> 
 
         <!-- Seção de Venda -->
         <section class="section">
           <h3 class="hsection">Venda de Ações</h3>
           <div>
-            <label for="sellStockSymbol">Ativos:</label>
-            <input type="text" id="sellStockSymbol" v-model="sell.stockSymbol" />
-
             <label for="sellQuantity">Quantidade:</label>
             <input type="number" id="sellQuantity" v-model="sell.quantity" />
 
@@ -83,6 +81,10 @@ import swal from 'sweetalert';
 export default {
   data() {
     return {
+      
+      idDoAtivo: '', // Armazena o ID inserido pelo usuário
+      detalhesAtivo: null, // Armazena os detalhes do ativo obtidos da API
+      
       buy: {
         stockSymbol: '',
         quantity: 0,
@@ -93,15 +95,15 @@ export default {
         quantity: 0,
         price: 0,
       },
-      ownedStocks: [],
-      detalhesAtivo: null, 
+      ownedStocks: [ ],
+      // detalhesAtivo: null, 
     };
   },
 
   methods: {
-    async getDetalhesAtivo(symbol) {
+    async getDetalhesAtivo(id) {
       try {
-        const detalhesAtivo = await ordemController.getDetalhesAtivo(symbol);
+        const detalhesAtivo = await ordemController.getDetalhesAtivo(id);
 
         // Armazenar os detalhes do ativo para referência posterior
         this.detalhesAtivo = detalhesAtivo;

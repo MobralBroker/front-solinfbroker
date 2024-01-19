@@ -43,16 +43,27 @@ const ordemController = {
     }
   },
 
-  getDetalhesAtivo: async (symbol) => {
+  getDetalhesAtivo: async (id) => {
     try {
-      const response = await crudApi.get(`/ativo/${id}`);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token não encontrado. Refaça o login.');
+        return;
+      }
+
+      const response = await crudApi.get(`/ativo/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      console.log(response);
+      console.log(response.data.sigla);
       return response.data;
     } catch (error) {
       console.error(`Erro ao buscar detalhes do ativo ${id}:`, error);
       throw error;
     }
   },
-
 };
 
 export default ordemController;

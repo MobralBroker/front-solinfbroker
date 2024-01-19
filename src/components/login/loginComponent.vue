@@ -94,7 +94,7 @@
                     
                     console.log("login ::: ",token)
 
-                    localStorage.setItem('token', token)
+                    localStorage.setItem('token', token.token)
 
                     swal({
                         title: 'Sucesso!',
