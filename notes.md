@@ -8,4 +8,4 @@
 
 
 #### FIX
---> Construir logica de Post | Get na tela Panel e Carteira para validar com API CRud
+--> Logica de Post | Get na tela Painel de investimentos sem funcionar! Validar comunicação com API CRUD
