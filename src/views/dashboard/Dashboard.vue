@@ -15,7 +15,7 @@
             <CRow>
               <CCol :xs="6">
 
-                <!-- Venda -->
+                <!-- Compra -->
                 <CListGroup>
                   <CListGroupItem active>Compra</CListGroupItem>
                   <CFormInput placeholder="Ativo" autocomplete="Ativo" />
@@ -23,9 +23,8 @@
                   <CFormInput placeholder="Quantidade" autocomplete="username" />
 
                 </CListGroup>
-                <CButton :color='success' shape="rounded-pill"></CButton>
-
-
+              <br>
+                <CButton color="success" shape="rounded-pill" class="px-8" @click="Order" style="color: white;">Comprar</CButton>
               </CCol>
               <CCol :xs="6">
 
@@ -36,6 +35,9 @@
                   <CFormInput placeholder="Valor" autocomplete="Valor" />
                   <CFormInput placeholder="Quantidade" autocomplete="username" />
                 </CListGroup>
+                <br>
+                <CButton color="danger" shape="rounded-pill" class="px-8" @click="Ativos()" style="color: white;">Vender</CButton>
+
               </CCol>
             </CRow>
           </CCardBody>
@@ -46,7 +48,6 @@
 
                 
 
-        
         
         
         </CCard>
@@ -68,53 +69,49 @@
               <CTableHead class="text-nowrap">
                 <CTableRow>
                   <CTableHeaderCell class="bg-body-secondary text-center">
-                    <CIcon name="cil-people" />
                   </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary"> User </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary text-center">
-                    Country
-                  </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary"> Usage </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary text-center">
-                    Payment Method
-                  </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary"> Activity </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center" > Ativo </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Hora </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Max. </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Min.</CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Valor </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
+              
+              
               <CTableBody>
+                
                 <CTableRow v-for="item in tableExample" :key="item.name">
+                  
                   <CTableDataCell class="text-center">
-                    <CAvatar size="md" :src="item.avatar.src" :status="item.avatar.status" />
+                  
                   </CTableDataCell>
-                  <CTableDataCell>
+                  
+                  <CTableDataCell class="text-center" >
                     <div>{{ item.user.name }}</div>
-                    <div class="small text-body-secondary text-nowrap">
-                      <span>{{ item.user.new ? 'New' : 'Recurring' }}</span> |
-                      {{ item.user.registered }}
-                    </div>
                   </CTableDataCell>
+                  
                   <CTableDataCell class="text-center">
-                    <CIcon size="xl" :name="item.country.flag" :title="item.country.name" />
+                    <div>{{ "17:53:26" }}</div>
                   </CTableDataCell>
-                  <CTableDataCell>
-                    <div class="d-flex justify-content-between align-items-baseline">
-                      <div class="fw-semibold">{{ item.usage.value }}%</div>
-                      <div class="text-nowrap text-body-secondary small ms-3">
-                        {{ item.usage.period }}
-                      </div>
-                    </div>
-                    <CProgress thin :color="item.usage.color" :value="item.usage.value" />
-                  </CTableDataCell>
+                  
                   <CTableDataCell class="text-center">
-                    <CIcon size="xl" :name="item.payment.icon" />
+                      <div class="fw-semibold">{{ "50,53" }}</div>
                   </CTableDataCell>
+                  
+                  
+                  <CTableDataCell class="text-center">
+                    <div class="fw-semibold">{{ "40,53" }}</div>
+                  </CTableDataCell>
+                  
                   <CTableDataCell>
-                    <div class="small text-body-secondary">Last login</div>
-                    <div class="fw-semibold text-nowrap">
-                      {{ item.activity }}
+                    <div class="small text-body-secondary text-center ">Último Valor</div>
+                    <div class="fw-semibold text-nowrap text-center ">{{ item.activity }}
                     </div>
                   </CTableDataCell>
                 </CTableRow>
+              
+              
               </CTableBody>
             </CTable>
 
@@ -140,6 +137,8 @@ import avatar4 from '@/assets/images/avatars/4.jpg'
 import avatar5 from '@/assets/images/avatars/5.jpg'
 import avatar6 from '@/assets/images/avatars/6.jpg'
 import MainChart from './MainChart'
+import service from '../../service/controller';
+import swal from 'sweetalert';
 
 export default {
   name: 'Dashboard',
@@ -147,37 +146,12 @@ export default {
     MainChart,
   },
   setup() {
-    const progressGroupExample1 = [
-      { title: 'Monday', value1: 34, value2: 78 },
-      { title: 'Tuesday', value1: 56, value2: 94 },
-      { title: 'Wednesday', value1: 12, value2: 67 },
-      { title: 'Thursday', value1: 43, value2: 91 },
-      { title: 'Friday', value1: 22, value2: 73 },
-      { title: 'Saturday', value1: 53, value2: 82 },
-      { title: 'Sunday', value1: 9, value2: 69 },
-    ]
-    const progressGroupExample2 = [
-      { title: 'Male', icon: 'cil-user', value: 53 },
-      { title: 'Female', icon: 'cil-user-female', value: 43 },
-    ]
-    const progressGroupExample3 = [
-      {
-        title: 'Organic Search',
-        icon: 'cib-google',
-        percent: 56,
-        value: '191,235',
-      },
-      { title: 'Facebook', icon: 'cib-facebook', percent: 15, value: '51,223' },
-      { title: 'Twitter', icon: 'cib-twitter', percent: 11, value: '37,564' },
-      { title: 'LinkedIn', icon: 'cib-linkedin', percent: 8, value: '27,319' },
-    ]
+    
     const tableExample = [
       {
         avatar: { src: avatar1, status: 'success' },
         user: {
-          name: 'Yiorgos Avraamu',
-          new: true,
-          registered: 'Jan 1, 2023',
+          name: 'Banco Itau'
         },
         country: { name: 'USA', flag: 'cif-us' },
         usage: {
@@ -188,6 +162,9 @@ export default {
         payment: { name: 'Mastercard', icon: 'cib-cc-mastercard' },
         activity: '10 sec ago',
       },
+
+
+      
       {
         avatar: { src: avatar2, status: 'danger' },
         user: {
@@ -286,9 +263,14 @@ export default {
                         swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
                     }
 
-            
-            
             },
+    async Ativos(){
+          try{
+              await service.getAtivos();
+          } catch(error){
+
+          }
+    }
   }
 }
 </script>

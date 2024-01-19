@@ -15,9 +15,7 @@ export default{
 
     async sentOrder(data){
         
-        const token = localStorage.getItem('token');
-        console.log(token);
-        
+        const token = localStorage.getItem('token');        
         if (!token) {
             console.error('Token não encontrado. Faça o login para obter o token.');
             return;
@@ -29,5 +27,27 @@ export default{
             },
         })
         
-    }
+    },
+
+
+    async getAtivos(){
+        
+        const token = localStorage.getItem('token');        
+        if (!token) {
+            console.error('Token não encontrado. Faça o login para obter o token.');
+            return;
+        }
+
+        const response = await crudApi.get('/ativo',{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+
+        console.log(response);
+        
+    },
+
+
+    
 }
