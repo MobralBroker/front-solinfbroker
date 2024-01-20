@@ -68,51 +68,22 @@
             <CTable align="middle" class="mb-0 border" hover responsive>
               <CTableHead class="text-nowrap">
                 <CTableRow>
-                  <CTableHeaderCell class="bg-body-secondary text-center">
-                  </CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary text-center" > Ativo </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary text-center"> Hora </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Atualização </CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary text-center"> Max. </CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary text-center"> Min.</CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary text-center"> Valor </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
-              
-              
               <CTableBody>
-                
-                <CTableRow v-for="item in empresas" :key="item.name">
-                  
-                  <CTableDataCell class="text-center">
-                  
-                  </CTableDataCell>
-                  
-                  <CTableDataCell class="text-center" >
-                    <div>{{ "" }}</div>
-                  </CTableDataCell>
-                  
-                  <CTableDataCell class="text-center">
-                    <div>{{ "17:53:26" }}</div>
-                  </CTableDataCell>
-                  
-                  <CTableDataCell class="text-center">
-                      <div class="fw-semibold">{{ "50,53" }}</div>
-                  </CTableDataCell>
-                  
-                  
-                  <CTableDataCell class="text-center">
-                    <div class="fw-semibold">{{ "40,53" }}</div>
-                  </CTableDataCell>
-                  
-                  <CTableDataCell>
-                    <div class="small text-body-secondary text-center ">Último Valor</div>
-                    <div class="fw-semibold text-nowrap text-center ">{{ item.activity }}
-                    </div>
-                  </CTableDataCell>
-                </CTableRow>
-              
-              
-              </CTableBody>
+                <CTableRow v-for="item in vetorAtivos" :key="item.id" v-on:click="(handleItemAtivo(item))" >
+                <CTableDataCell class="text-center"> <div>{{ item.sigla }} </div> </CTableDataCell>
+                <CTableDataCell class="text-center"> <div> {{ item.atualizacao }} </div> </CTableDataCell>
+                <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.valorMax }}</div> </CTableDataCell>
+                <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.valorMin }}</div> </CTableDataCell> 
+                <CTableDataCell> <div class="fw-semibold text-nowrap text-center ">{{ item.valor }} </div> </CTableDataCell>
+              </CTableRow>
+            </CTableBody>
             </CTable>
 
 
@@ -131,26 +102,17 @@
 
 <script>
 
-
-import MainChart from './MainChart'
 import service from '../../service/controller';
 import swal from 'sweetalert';
 
 export default {
   name: 'Dashboard',
   components: {
-    MainChart,
-  },
-  setup() {
     
-    const empresas = [
-      {
-
-      }
-    ]
-
+  },
+  data() {
+    vetorAtivos: []
     return {
-      empresas,
           sell: {
                     idCliente: 1,
                     idAtivo: 1,
@@ -164,6 +126,11 @@ export default {
     }
   },
   methods:{
+
+    handleItemAtivo(item){
+      console.log(item)
+      },
+
     async Order(){
                 try {
                     await service.sentOrder(this.sell);
@@ -177,24 +144,13 @@ export default {
     
     async Ativos(){
           try{
-              const listAtivos = await service.getAtivos();
-              
-              console.log(listAtivos)
-              
-              listAtivos.forEach(item => {
-                const idEmpresa = item.idEmpresa;
+              const response = await service.getAtivos();
+              const responseData = response.data
 
-                console.log(idEmpresa)
-                if (!empresas[idEmpresa]) {
+             if (Array.isArray(responseData)) {
 
-
-                    // empresas[idEmpresa] = {
-                    //     empresa: item.empresa,
-                    //     acoes: []
-                    // };
-                }
-
-              empresas[idEmpresa].acoes.push({
+              this.vetorAtivos = responseData.map(item => {   
+                return {
                   id: item.id,
                   sigla: item.sigla,
                   nome: item.nome,
@@ -203,18 +159,21 @@ export default {
                   valorMax: item.valorMax,
                   valorMin: item.valorMin,
                   valor: item.valor
+                };
               });
-              })
-
-              console.log(this.empresas)
-
+              console.log(this.vetorAtivos)
+            }            
           } catch(error){
             console.log(error)
           }
     },
-    
+  
+  },
 
-    
-  }
+  /*  FINISH FUNC'S    */
+
+  mounted() {
+    this.Ativos();
+  },
 }
 </script>
