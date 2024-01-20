@@ -106,6 +106,7 @@
                         text: 'Usuário(a) logado com sucesso!',
                         icon: 'success',
                     }).then(()=>{
+                        localStorage.setItem('userMail', this.email)
                         this.$router.push('/home')
                     })
                 }

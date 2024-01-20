@@ -1,6 +1,9 @@
 import { authenticationApi, crudApi } from "./api"
 
 export default{
+    
+            /*   MS-AUTH  */
+
     async register(data){
         console.log(data)
         const response=await authenticationApi.post('/auth/register', data)
@@ -12,6 +15,21 @@ export default{
         return  response.data
           
     },
+    
+    async getUserProfile(email){
+        
+        const token = localStorage.getItem('token');        
+        if (!token) {
+            console.error('Token não encontrado. Faça o login para obter o token.');
+            return;
+        }
+        const response = await authenticationApi.get('/auth/usuario/' + email)
+        return response.data;
+    },
+
+
+
+    /*   MS-CRUD GERAL  */
 
     async sentOrder(data){
         
@@ -37,16 +55,12 @@ export default{
             console.error('Token não encontrado. Faça o login para obter o token.');
             return;
         }
-
         const response = await crudApi.get('/ativo',{
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
         })
-        return response;
-        
+        return response.data;
     },
-
-
     
 }

@@ -81,6 +81,8 @@ export default {
                             if (result) {
                                 swal('Saindo da broker', 'Retornado ao login', 'success');
                                 localStorage.removeItem('token')
+                                localStorage.removeItem('userMail');
+
                                 this.$router.push('/')
                                 
                             } else {

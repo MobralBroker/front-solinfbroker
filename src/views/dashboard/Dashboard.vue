@@ -2,7 +2,6 @@
   <div>
     
   
-    <WidgetsStatsD class="mb-4" />
     <CRow>
       <CCol :md="12">
       <CCard class="mb-4">
@@ -15,29 +14,16 @@
             <CRow>
               <CCol :xs="6">
 
-                <!-- Compra -->
+                <!-- Compra/Venda -->
                 <CListGroup>
-                  <CListGroupItem active>Compra</CListGroupItem>
-                  <CFormInput placeholder="Ativo" autocomplete="Ativo" />
-                  <CFormInput placeholder="Valor" autocomplete="Valor" />
+                  <CListGroupItem active>Ordem</CListGroupItem>
+                  <CFormInput placeholder="Ativo" autocomplete="Ativo" v-model="selectedAtivo.sigla"> </CFormInput>
+                  <CFormInput placeholder="Valor" autocomplete="Valor" v-model="selectedAtivo.valor"/>
                   <CFormInput placeholder="Quantidade" autocomplete="username" />
-
-                </CListGroup>
-              <br>
-                <CButton color="success" shape="rounded-pill" class="px-8" @click="Order" style="color: white;">Comprar</CButton>
-              </CCol>
-              <CCol :xs="6">
-
-                <!-- Venda -->
-                <CListGroup>
-                  <CListGroupItem active>Venda</CListGroupItem>
-                  <CFormInput placeholder="Ativo" autocomplete="Ativo" />
-                  <CFormInput placeholder="Valor" autocomplete="Valor" />
-                  <CFormInput placeholder="Quantidade" autocomplete="username" />
+                  <CFormSwitch :switch="{ color: 'success' }" size="xl" label="Vender" id="formSwitchCheckDefaultXL"/>
                 </CListGroup>
                 <br>
-                <CButton color="danger" shape="rounded-pill" class="px-8" @click="Ativos()" style="color: white;">Vender</CButton>
-
+                <CButton color="success" shape="rounded-pill" class="px-8" @click="Order" style="color: white;">Enviar Oderm</CButton>
               </CCol>
             </CRow>
           </CCardBody>
@@ -46,24 +32,19 @@
     </CCol>
          
 
-                
-
-        
-        
+                        
         </CCard>
       </CCol>
     </CRow>
 
 
 
-    <WidgetsStatsA class="mb-4" />
     <CRow>
+      
       <CCol :md="12">
+        
         <CCard class="mb-4">
-
-          <CCardFooter>
-
-
+          <CCardHeader>Destaques de Mercado</CCardHeader>
 
             <CTable align="middle" class="mb-0 border" hover responsive>
               <CTableHead class="text-nowrap">
@@ -86,10 +67,6 @@
             </CTableBody>
             </CTable>
 
-
-
-
-          </CCardFooter>
         </CCard>
       </CCol>
     </CRow>
@@ -111,7 +88,7 @@ export default {
     
   },
   data() {
-    vetorAtivos: []
+    
     return {
           sell: {
                     idCliente: 1,
@@ -122,13 +99,34 @@ export default {
           },
           buy: {
             
+          },
+          selectedAtivo: {
+              id: null,
+              sigla: '',
+              nome: null,
+              atualizacao: null,
+              quantidadesPapeis: null,
+              valorMax: null,
+              valorMin:null,
+              valor: null
+          },
+
+          vetorAtivos: [],
+          
+          userProfile: {
           }
     }
   },
   methods:{
 
     handleItemAtivo(item){
-      console.log(item)
+      this.selectedAtivo.id = item.id
+      this.selectedAtivo.sigla = item.nome
+      this.selectedAtivo.atualizacao = item.atualizacao
+      this.selectedAtivo.quantidadesPapeis = item.quantidadesPapeis
+      this.selectedAtivo.valorMax = item.valorMax
+      this.selectedAtivo.valorMin = item.valorMin
+      this.selectedAtivo.valor = item.valor
       },
 
     async Order(){
@@ -145,35 +143,49 @@ export default {
     async Ativos(){
           try{
               const response = await service.getAtivos();
-              const responseData = response.data
+              if (Array.isArray(response)) {
 
-             if (Array.isArray(responseData)) {
-
-              this.vetorAtivos = responseData.map(item => {   
-                return {
-                  id: item.id,
-                  sigla: item.sigla,
-                  nome: item.nome,
-                  atualizacao: item.atualizacao,
-                  quantidadesPapeis: item.quantidadesPapeis,
-                  valorMax: item.valorMax,
-                  valorMin: item.valorMin,
-                  valor: item.valor
-                };
-              });
-              console.log(this.vetorAtivos)
-            }            
-          } catch(error){
-            console.log(error)
-          }
+                this.vetorAtivos = response.map(item => {   
+                  return {
+                    id: item.id,
+                    sigla: item.sigla,
+                    nome: item.nome,
+                    atualizacao: item.atualizacao,
+                    quantidadesPapeis: item.quantidadesPapeis,
+                    valorMax: item.valorMax,
+                    valorMin: item.valorMin,
+                    valor: item.valor
+                  };
+                });
+                console.log(this.vetorAtivos)
+              }            
+            } catch(error){
+              console.log(error)
+            }
     },
-  
+
+    async getProfile(){
+      const email = localStorage.getItem('userMail')
+      const response = await service.getUserProfile(email);
+      try{
+        this.userProfile = {   
+            id: response.id,
+            nomeUsuario: response.nomeUsuario,
+            saldo: response.saldo,
+            email: response.email
+        }
+      } catch(error){
+        console.log(error)
+      }
+  },
+
   },
 
   /*  FINISH FUNC'S    */
 
   mounted() {
     this.Ativos();
+    this.getProfile();
   },
 }
 </script>
