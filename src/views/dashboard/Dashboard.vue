@@ -19,12 +19,30 @@
                   <CListGroupItem active>Ordem</CListGroupItem>
                   <CFormInput placeholder="Ativo" autocomplete="Ativo" v-model="selectedAtivo.sigla"> </CFormInput>
                   <CFormInput placeholder="Valor" autocomplete="Valor" v-model="selectedAtivo.valor"/>
-                  <CFormInput placeholder="Quantidade" autocomplete="username" />
-                  <CFormSwitch :switch="{ color: 'success' }" size="xl" label="Vender" id="formSwitchCheckDefaultXL"/>
+                  <CFormInput placeholder="Quantidade" autocomplete="username" v-model="orderSellandBuy.quantidadeOrdem" />
+                  <CFormSwitch v-model="switchValue" :switch="{ color: 'success' }" size="xl" label="Vender" id="formSwitchCheckDefaultXL"/>
                 </CListGroup>
                 <br>
                 <CButton color="success" shape="rounded-pill" class="px-8" @click="Order" style="color: white;">Enviar Oderm</CButton>
               </CCol>
+
+
+              <CCol :xs="6">
+                <CCol :xs="10">
+                  <CWidgetStatsF color="info" :padding="false" :title="userProfile.email" :value="userProfile.nomeUsuario" >
+                    <template #icon><CIcon icon="cil-people" size="xl"/> </template>
+                  </CWidgetStatsF>
+
+                </CCol>
+                <br>
+                <CCol :xs="10">
+                  <CWidgetStatsF color="warning" :padding="false" title="SALDO" :value='12432.00'> <!-- userProfile.saldo -->
+                      <template #icon><CIcon icon="cil-dollar" size="xl"/> </template>
+                  </CWidgetStatsF>
+                </CCol>
+              </CCol>
+
+
             </CRow>
           </CCardBody>
         </CCardBody>
@@ -90,15 +108,12 @@ export default {
   data() {
     
     return {
-          sell: {
-                    idCliente: 1,
-                    idAtivo: 1,
-                    tipoOrdem: "ORDEM_VENDA",
-                    valorOrdem: 1,
-                    quantidadeOrdem: 1
-          },
-          buy: {
-            
+          orderSellandBuy: {
+                    idCliente:'',
+                    idAtivo: '', 
+                    tipoOrdem: '',
+                    valorOrdem: '',
+                    quantidadeOrdem: null
           },
           selectedAtivo: {
               id: null,
@@ -114,14 +129,16 @@ export default {
           vetorAtivos: [],
           
           userProfile: {
-          }
+          },
+          switchValue: false,
     }
   },
   methods:{
 
     handleItemAtivo(item){
       this.selectedAtivo.id = item.id
-      this.selectedAtivo.sigla = item.nome
+      this.selectedAtivo.sigla = item.sigla
+      this.selectedAtivo.nome = item.nome
       this.selectedAtivo.atualizacao = item.atualizacao
       this.selectedAtivo.quantidadesPapeis = item.quantidadesPapeis
       this.selectedAtivo.valorMax = item.valorMax
@@ -130,12 +147,26 @@ export default {
       },
 
     async Order(){
+                  console.log(this.switchValue.data)
+              
+                  if(this.switchValue == true){
+                    this.orderSellandBuy.tipoOrdem = "ORDEM_VENDA"
+                  }else{
+                    this.orderSellandBuy.tipoOrdem = "ORDEM_COMPRA"
+                  }
+                  
+                  this.orderSellandBuy.quantidadeOrdem = parseInt( this.orderSellandBuy.quantidadeOrdem , 10)
+                   this.orderSellandBuy.idCliente = this.userProfile.id
+                   this.orderSellandBuy.idAtivo = this.selectedAtivo.id
+                   this.orderSellandBuy.valorOrdem = this.selectedAtivo.valor
+
                 try {
-                    await service.sentOrder(this.sell);
-                    swal('Sucesso', 'Ações compradas com sucesso!', 'success');
+                    console.log(this.orderSellandBuy)
+                    await service.sentOrder(this.orderSellandBuy);
+                    swal('Sucesso', 'Oderm submetidas com sucesso!', 'success');
                     } catch (error) {
                         console.error('Erro ao comprar ações:', error);
-                        swal('Erro', 'Ocorreu um erro ao comprar ações', 'error');
+                        swal('Erro', 'Ocorreu um erro ao processar sua ordem T.T', 'error');
                     }
 
             },
@@ -167,6 +198,7 @@ export default {
     async getProfile(){
       const email = localStorage.getItem('userMail')
       const response = await service.getUserProfile(email);
+      console.log(response)
       try{
         this.userProfile = {   
             id: response.id,
@@ -174,6 +206,7 @@ export default {
             saldo: response.saldo,
             email: response.email
         }
+        console.log(this.userProfile)
       } catch(error){
         console.log(error)
       }
