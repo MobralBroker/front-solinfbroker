@@ -36,7 +36,7 @@
                 </CCol>
                 <br>
                 <CCol :xs="10">
-                  <CWidgetStatsF color="warning" :padding="false" title="SALDO" :value='12432.00'> <!-- userProfile.saldo -->
+                  <CWidgetStatsF color="warning" :padding="false" title="SALDO" :value="userProfile.saldo"> <!-- userProfile.saldo -->
                       <template #icon><CIcon icon="cil-dollar" size="xl"/> </template>
                   </CWidgetStatsF>
                 </CCol>
