@@ -81,14 +81,14 @@
               
               <CTableBody>
                 
-                <CTableRow v-for="item in tableExample" :key="item.name">
+                <CTableRow v-for="item in empresas" :key="item.name">
                   
                   <CTableDataCell class="text-center">
                   
                   </CTableDataCell>
                   
                   <CTableDataCell class="text-center" >
-                    <div>{{ item.user.name }}</div>
+                    <div>{{ "" }}</div>
                   </CTableDataCell>
                   
                   <CTableDataCell class="text-center">
@@ -130,12 +130,8 @@
 </template>
 
 <script>
-import avatar1 from '@/assets/images/avatars/1.jpg'
-import avatar2 from '@/assets/images/avatars/2.jpg'
-import avatar3 from '@/assets/images/avatars/3.jpg'
-import avatar4 from '@/assets/images/avatars/4.jpg'
-import avatar5 from '@/assets/images/avatars/5.jpg'
-import avatar6 from '@/assets/images/avatars/6.jpg'
+
+
 import MainChart from './MainChart'
 import service from '../../service/controller';
 import swal from 'sweetalert';
@@ -147,100 +143,14 @@ export default {
   },
   setup() {
     
-    const tableExample = [
+    const empresas = [
       {
-        avatar: { src: avatar1, status: 'success' },
-        user: {
-          name: 'Banco Itau'
-        },
-        country: { name: 'USA', flag: 'cif-us' },
-        usage: {
-          value: 50,
-          period: 'Jun 11, 2023 - Jul 10, 2023',
-          color: 'success',
-        },
-        payment: { name: 'Mastercard', icon: 'cib-cc-mastercard' },
-        activity: '10 sec ago',
-      },
 
-
-      
-      {
-        avatar: { src: avatar2, status: 'danger' },
-        user: {
-          name: 'Avram Tarasios',
-          new: false,
-          registered: 'Jan 1, 2023',
-        },
-        country: { name: 'Brazil', flag: 'cif-br' },
-        usage: {
-          value: 22,
-          period: 'Jun 11, 2023 - Jul 10, 2023',
-          color: 'info',
-        },
-        payment: { name: 'Visa', icon: 'cib-cc-visa' },
-        activity: '5 minutes ago',
-      },
-      {
-        avatar: { src: avatar3, status: 'warning' },
-        user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2023' },
-        country: { name: 'India', flag: 'cif-in' },
-        usage: {
-          value: 74,
-          period: 'Jun 11, 2023 - Jul 10, 2023',
-          color: 'warning',
-        },
-        payment: { name: 'Stripe', icon: 'cib-cc-stripe' },
-        activity: '1 hour ago',
-      },
-      {
-        avatar: { src: avatar4, status: 'secondary' },
-        user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2023' },
-        country: { name: 'France', flag: 'cif-fr' },
-        usage: {
-          value: 98,
-          period: 'Jun 11, 2023 - Jul 10, 2023',
-          color: 'danger',
-        },
-        payment: { name: 'PayPal', icon: 'cib-cc-paypal' },
-        activity: 'Last month',
-      },
-      {
-        avatar: { src: avatar5, status: 'success' },
-        user: {
-          name: 'Agapetus Tadeáš',
-          new: true,
-          registered: 'Jan 1, 2023',
-        },
-        country: { name: 'Spain', flag: 'cif-es' },
-        usage: {
-          value: 22,
-          period: 'Jun 11, 2023 - Jul 10, 2023',
-          color: 'primary',
-        },
-        payment: { name: 'Google Wallet', icon: 'cib-cc-apple-pay' },
-        activity: 'Last week',
-      },
-      {
-        avatar: { src: avatar6, status: 'danger' },
-        user: {
-          name: 'Friderik Dávid',
-          new: true,
-          registered: 'Jan 1, 2023',
-        },
-        country: { name: 'Poland', flag: 'cif-pl' },
-        usage: {
-          value: 43,
-          period: 'Jun 11, 2023 - Jul 10, 2023',
-          color: 'success',
-        },
-        payment: { name: 'Amex', icon: 'cib-cc-amex' },
-        activity: 'Last week',
-      },
+      }
     ]
 
     return {
-      tableExample,
+      empresas,
           sell: {
                     idCliente: 1,
                     idAtivo: 1,
@@ -264,13 +174,47 @@ export default {
                     }
 
             },
+    
     async Ativos(){
           try{
-              await service.getAtivos();
-          } catch(error){
+              const listAtivos = await service.getAtivos();
+              
+              console.log(listAtivos)
+              
+              listAtivos.forEach(item => {
+                const idEmpresa = item.idEmpresa;
 
+                console.log(idEmpresa)
+                if (!empresas[idEmpresa]) {
+
+
+                    // empresas[idEmpresa] = {
+                    //     empresa: item.empresa,
+                    //     acoes: []
+                    // };
+                }
+
+              empresas[idEmpresa].acoes.push({
+                  id: item.id,
+                  sigla: item.sigla,
+                  nome: item.nome,
+                  atualizacao: item.atualizacao,
+                  quantidadesPapeis: item.quantidadesPapeis,
+                  valorMax: item.valorMax,
+                  valorMin: item.valorMin,
+                  valor: item.valor
+              });
+              })
+
+              console.log(this.empresas)
+
+          } catch(error){
+            console.log(error)
           }
-    }
+    },
+    
+
+    
   }
 }
 </script>
