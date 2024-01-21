@@ -9,16 +9,22 @@ export default [
       text: 'NEW',
     },
   },
-  // {
-  //   component: 'CNavTitle',
-  //   name: 'Theme',
-  // },
-  // {
-  //   component: 'CNavItem',
-  //   name: 'Colors',
-  //   to: '/theme/colors',
-  //   icon: 'cil-drop',
-  // },
+  {
+    component: 'CNavTitle',
+    name: 'Conta',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Carteira',
+    to: '/carteira',
+    icon: 'cilUser',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Ordens',
+    to: '/ordens',
+    icon: 'cilMagnifyingGlass',
+  },
   // {
   //   component: 'CNavItem',
   //   name: 'Typography',

@@ -22,7 +22,21 @@ const router = createRouter({
           name: 'home',
           component: () => import('../views/dashboard/Dashboard.vue'),
           meta: { requireAuth: true }
-        }
+        },
+        {
+          path: '/carteira',
+          name: 'carteira',
+          component: () => import('../views/carteira/Carteira.vue'),
+          meta: { requireAuth: true }
+    
+        },
+        {
+          path: '/ordens',
+          name: 'ordens',
+          component: () => import('../views/ordens/Ordens.vue'),
+          meta: { requireAuth: true }
+    
+        },
       ]
     },
     {
@@ -30,12 +44,12 @@ const router = createRouter({
       name: 'register',
       
       component: () => import('../views/register/Register.vue')
-    },
+    },    
   ]
 })
 
   router.beforeEach((to, from, next) => {
-    // next()
+     next()
      if (to.matched.some((record) => record.meta.requireAuth)) {
        if (localStorage.getItem('token') == null) {
          next({
