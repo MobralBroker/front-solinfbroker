@@ -11,25 +11,38 @@
             <CTable align="middle" class="mb-0 border" hover responsive>
               <CTableHead class="text-nowrap">
                 <CTableRow>
-                  <CTableHeaderCell class="bg-body-secondary text-center" > Ativo </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary text-center"> Atualização </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary text-center"> Max. </CTableHeaderCell>
-                  <CTableHeaderCell class="bg-body-secondary text-center"> Min.</CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center" > ID </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Ativo </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Quantidade </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Tipo</CTableHeaderCell>
                   <CTableHeaderCell class="bg-body-secondary text-center"> Valor </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center"> Status </CTableHeaderCell>
+                  <CTableHeaderCell class="bg-body-secondary text-center">  </CTableHeaderCell>
+
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow v-for="item in vetorAtivos" :key="item.id" v-on:click="(handleItemAtivo(item))" >
-                <CTableDataCell class="text-center"> <div>{{ item.sigla }} </div> </CTableDataCell>
-                <CTableDataCell class="text-center"> <div> {{ item.atualizacao }} </div> </CTableDataCell>
-                <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.valorMax }}</div> </CTableDataCell>
-                <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.valorMin }}</div> </CTableDataCell> 
-                <CTableDataCell> <div class="fw-semibold text-nowrap text-center ">{{ item.valor }} </div> </CTableDataCell>
+                <CTableRow v-for="item in vetorOrderns" :key="item.id"  >
+                <CTableDataCell class="text-center"> <div>{{ item.id }} </div> </CTableDataCell>
+                <CTableDataCell class="text-center"> <div> {{ item.idAtivo }} </div> </CTableDataCell>
+                <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.quantidadeOrdem }}</div> </CTableDataCell>
+                <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.tipoOrdem }}</div> </CTableDataCell> 
+                <CTableDataCell> <div class="fw-semibold text-nowrap text-center ">{{ item.valorOrdem }} </div> </CTableDataCell>
+                <CTableDataCell> <div class="fw-semibold text-nowrap text-center ">{{ item.statusOrdem }} </div> </CTableDataCell>
+                <CButton color="danger"  shape="rounded-pill"  variant="ghost">CANCELAR</CButton>
+
               </CTableRow>
               </CTableBody>
+              <br>
+
+              <CButton color="success" shape="rounded-pill" class="px-8" @click="listarOrdens()" style="color: white;">Atualizar</CButton>
             </CTable>
 
         </CCard>
+
+
+
+
       </CCol>
 
 
@@ -62,84 +75,35 @@ export default {
                     valorOrdem: '',
                     quantidadeOrdem: null
           },
-          selectedAtivo: {
-              id: null,
-              sigla: '',
-              nome: null,
-              atualizacao: null,
-              quantidadesPapeis: null,
-              valorMax: null,
-              valorMin:null,
-              valor: null
-          },
-
-          vetorAtivos: [],
+          vetorOrderns: [],
           
           userProfile: {
           },
-          switchValue: false,
     }
   },
   methods:{
+    async listarOrdens(id){
+      try{
+            const listOderns = await service.getOrdensClient(id)
+            console.log(listOderns)
+            if (Array.isArray(listOderns)) {
 
-    handleItemAtivo(item){
-      this.selectedAtivo.id = item.id
-      this.selectedAtivo.sigla = item.sigla
-      this.selectedAtivo.nome = item.nome
-      this.selectedAtivo.atualizacao = item.atualizacao
-      this.selectedAtivo.quantidadesPapeis = item.quantidadesPapeis
-      this.selectedAtivo.valorMax = item.valorMax
-      this.selectedAtivo.valorMin = item.valorMin
-      this.selectedAtivo.valor = item.valor
-      },
-
-    async Order(){
-                  console.log(this.switchValue.data)
-              
-                  if(this.switchValue == true){
-                    this.orderSellandBuy.tipoOrdem = "ORDEM_VENDA"
-                  }else{
-                    this.orderSellandBuy.tipoOrdem = "ORDEM_COMPRA"
-                  }
-                  
-                  this.orderSellandBuy.quantidadeOrdem = parseInt( this.orderSellandBuy.quantidadeOrdem , 10)
-                   this.orderSellandBuy.idCliente = this.userProfile.id
-                   this.orderSellandBuy.idAtivo = this.selectedAtivo.id
-                   this.orderSellandBuy.valorOrdem = this.selectedAtivo.valor
-
-                try {
-                    console.log(this.orderSellandBuy)
-                    await service.sentOrder(this.orderSellandBuy);
-                    swal('Sucesso', 'Oderm submetidas com sucesso!', 'success');
-                    } catch (error) {
-                        console.error('Erro ao comprar ações:', error);
-                        swal('Erro', 'Ocorreu um erro ao processar sua ordem T.T', 'error');
-                    }
-
-            },
-    
-    async Ativos(){
-          try{
-              const response = await service.getAtivos();
-              if (Array.isArray(response)) {
-
-                this.vetorAtivos = response.map(item => {   
-                  return {
-                    id: item.id,
-                    sigla: item.sigla,
-                    nome: item.nome,
-                    atualizacao: item.atualizacao,
-                    quantidadesPapeis: item.quantidadesPapeis,
-                    valorMax: item.valorMax,
-                    valorMin: item.valorMin,
-                    valor: item.valor
-                  };
-                });
-                console.log(this.vetorAtivos)
-              }            
-            } catch(error){
-              console.log(error)
-            }
+              this.vetorOrderns = listOderns.map(ordem => {   
+                return {
+                    id: ordem.id,
+                    idAtivo: ordem.idAtivo,
+                    idCliente: ordem.idCliente,
+                    quantidadeOrdem: ordem.quantidadeOrdem,
+                    statusOrdem: ordem.statusOrdem,
+                    tipoOrdem: ordem.tipoOrdem,
+                    valorOrdem: ordem.valorOrdem
+                };
+              });
+              console.log(this.vetorOrderns)
+            }            
+          } catch(error){
+            console.log(error)
+          }
     },
 
     async getProfile(){
@@ -157,6 +121,7 @@ export default {
       } catch(error){
         console.log(error)
       }
+      
   },
 
   },
@@ -164,8 +129,13 @@ export default {
   /*  FINISH FUNC'S    */
 
   mounted() {
-    this.Ativos();
+    const idClient = localStorage.getItem('idCliente')
+
     this.getProfile();
+    this.listarOrdens(idClient);
+
   },
+
+
 }
 </script>

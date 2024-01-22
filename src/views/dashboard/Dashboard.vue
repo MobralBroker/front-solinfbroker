@@ -206,7 +206,7 @@ export default {
             saldo: response.saldo,
             email: response.email
         }
-        console.log(this.userProfile)
+        localStorage.setItem('idCliente', this.userProfile.id);
       } catch(error){
         console.log(error)
       }
