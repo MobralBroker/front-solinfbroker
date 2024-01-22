@@ -94,19 +94,21 @@ export default {
   },
 
   async saque(){
-    const response = await service.getSaque(this.userProfile.id,this.valor);
     try{
-
+      const response = await service.getSaque(this.userProfile.id,this.valor);
+      swal('Sucesso', 'Deposito efetuado!', 'success');
       } catch(error){
+        swal('Erro', 'Ocorreu um erro ao efetuar o deposito T.T', 'error');
         console.log(error)
       }
   },
 
   async deposito(){
-    const response = await service.getDeposito(this.userProfile.id,this.valor);
     try{
-
+      const response = await service.getDeposito(this.userProfile.id,this.valor);
+      swal('Sucesso', 'Saque realizado!', 'success');
       } catch(error){
+        swal('Erro', 'Ocorreu um erro ao concluir o saque! T.T', 'error');
         console.log(error)
       }
     }

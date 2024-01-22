@@ -23,21 +23,23 @@
               </CTableHead>
               <CTableBody>
                 <CTableRow v-for="item in vetorOrderns" :key="item.id"  >
-                <CTableDataCell class="text-center"> <div>{{ item.id }} </div> </CTableDataCell>
-                <CTableDataCell class="text-center"> <div> {{ item.idAtivo }} </div> </CTableDataCell>
+                  <CTableDataCell class="text-center text-bold"> <div style="font-weight: bold;">{{ item.id }} </div> </CTableDataCell>
+                <CTableDataCell class="text-center"> <div> {{ item.sigla }} </div> </CTableDataCell>
                 <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.quantidadeOrdem }}</div> </CTableDataCell>
-                <CTableDataCell class="text-center"> <div class="fw-semibold">{{ item.tipoOrdem }}</div> </CTableDataCell> 
+                <CTableDataCell> <div class="fw-semibold text-nowrap text-center "> <CBadge :color="getColorByType(item.tipoOrdem)"> {{ getTypeByType(item.tipoOrdem) }} </CBadge> </div> </CTableDataCell>
                 <CTableDataCell> <div class="fw-semibold text-nowrap text-center ">{{ item.valorOrdem }} </div> </CTableDataCell>
-                <CTableDataCell> <div class="fw-semibold text-nowrap text-center ">{{ item.statusOrdem }} </div> </CTableDataCell>
-                <CButton color="danger"  shape="rounded-pill"  variant="ghost">CANCELAR</CButton>
+                <CTableDataCell> <div class="fw-semibold text-nowrap text-center "> <CBadge :color="getColorByStatus(item.statusOrdem)"> {{ item.statusOrdem }} </CBadge> </div> </CTableDataCell>                
+                <CTableDataCell> <CButton color="danger" shape="rounded-pill" class="px-12" @click="deteleOrder(item.id)" style="color: white;"> Cancelar ordem</CButton> </CTableDataCell>
 
               </CTableRow>
               </CTableBody>
+              
               <br>
-
-              <CButton color="success" shape="rounded-pill" class="px-8" @click="listarOrdens()" style="color: white;">Atualizar</CButton>
+              <div class="text-center">              
+                <CButton color="success"  class="px-8 text-center" @click="listarOrdens()" style="color: white;">Atualizar</CButton>
+              </div>
+              <br>
             </CTable>
-
         </CCard>
 
 
@@ -79,9 +81,51 @@ export default {
           
           userProfile: {
           },
+
+          objCancelaOrderm: {
+            idCliente: localStorage.getItem('idCliente'),
+            idAtivo: null,
+            tipoOrdem: null,
+            valorOrdem: null,
+            quantidadeOrdem: null
+
+          },
     }
   },
   methods:{
+    getColorByStatus(status) {
+      switch (status) {
+        case 'CANCELADA':
+          return 'warning'; // substitua 'status1' pela condição real
+        case 'ABERTA':
+          return 'success'; // substitua 'status2' pela condição real
+        default:
+          return 'secondary'; // cor padrão para outros casos
+      }
+    },
+
+    getTypeByType(tipoOrdem) {
+      console.log(tipoOrdem)
+      switch (tipoOrdem) {
+        case 'ORDEM_VENDA':
+          return 'Compra'; // substitua 'status1' pela condição real
+        case 'ORDEM_COMPRA':
+          return 'Venda'; // substitua 'status2' pela condição real
+        default:
+          return 'null'; // cor padrão para outros casos
+      }
+    },
+    getColorByType(tipoOrdem) {
+      switch (tipoOrdem) {
+        case 'ORDEM_VENDA':
+          return 'info'; // substitua 'status1' pela condição real
+        case 'ORDEM_COMPRA':
+          return 'success'; // substitua 'status2' pela condição real
+        default:
+          return 'null'; // cor padrão para outros casos
+      }
+    },
+   
     async listarOrdens(id){
       try{
             const listOderns = await service.getOrdensClient(id)
@@ -92,6 +136,7 @@ export default {
                 return {
                     id: ordem.id,
                     idAtivo: ordem.idAtivo,
+                    sigla: ordem.sigla,
                     idCliente: ordem.idCliente,
                     quantidadeOrdem: ordem.quantidadeOrdem,
                     statusOrdem: ordem.statusOrdem,
@@ -122,6 +167,29 @@ export default {
         console.log(error)
       }
       
+  },
+
+  async deteleOrder(idAtivo){
+    try{
+
+      this.objCancelaOrderm.idAtivo = idAtivo
+      this.objCancelaOrderm.tipoOrdem = null
+      this.objCancelaOrderm.valorOrdem = null
+      this.objCancelaOrderm.quantidadeOrdem = null
+      
+      await service.deleteOrdemClient(idAtivo, this.objCancelaOrderm);
+      
+      swal({
+            title: 'Sucesso!',
+            text: 'Ordem deletada!',
+            icon: 'success',
+          }).then(()=>{
+              console.log('deu certo')
+          });
+      } catch(error){
+        swal('Erro', 'Ocorreu um erro ao deletar a ordem T.T', 'error');
+        console.log(error)
+      }
   },
 
   },

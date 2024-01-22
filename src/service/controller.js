@@ -136,7 +136,7 @@ export default{
             return;
         }
 
-        const listOderns = await crudApi.get(`/ordem/cliente/${idCliente}`,  {
+        const listOderns = await crudApi.get(`/ordem/cliente/${idCliente}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
@@ -145,7 +145,32 @@ export default{
         return listOderns.data;
     },
 
+    async deleteOrdemClient(idOrdem, ordem){
+        
+        const token = localStorage.getItem('token');        
+        if (!token) {
+            console.error('Token não encontrado. Faça o login para obter o token.');
+            return;
+        }
+        try {
+            await crudApi.put(`/ordem/cancelar-ordem/${idOrdem}`, ordem,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                // 'Content-Type': 'application/json',
+                // 'Content-Lengtht': 'calculated when request is sent',
+                // 'Host': 'calculated when request is sent',
+                // 'Accept': '*/*',
+                // 'Accept-Encoding': 'gzip, deflate, br',
+                // 'Connection': 'keep-alive',
+                },
+            
+        });
+        } catch (error) {
+        
+        }
+    },
+
+
 }
 
-
-//"/cliente/{id}
+//localhost:8081/ordem/cancelar-ordem/7
