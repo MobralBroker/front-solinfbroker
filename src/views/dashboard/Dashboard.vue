@@ -155,13 +155,12 @@ export default {
                     this.orderSellandBuy.tipoOrdem = "ORDEM_COMPRA"
                   }
                   
-                  this.orderSellandBuy.quantidadeOrdem = parseInt( this.orderSellandBuy.quantidadeOrdem , 10)
+                   this.orderSellandBuy.quantidadeOrdem = parseInt( this.orderSellandBuy.quantidadeOrdem , 10)
                    this.orderSellandBuy.idCliente = this.userProfile.id
                    this.orderSellandBuy.idAtivo = this.selectedAtivo.id
                    this.orderSellandBuy.valorOrdem = this.selectedAtivo.valor
 
                 try {
-                    console.log(this.orderSellandBuy)
                     await service.sentOrder(this.orderSellandBuy);
                     swal('Sucesso', 'Oderm submetidas com sucesso!', 'success');
                     } catch (error) {
@@ -213,7 +212,7 @@ export default {
   },
 
   },
-
+  
   /*  FINISH FUNC'S    */
 
   mounted() {

@@ -16,7 +16,7 @@
                 <CCol :xs="10">
                   <CWidgetStatsF color="success" :padding="false" title="DEPOSITAR" :value="this.userProfile.saldo">
                     <template #icon><CIcon icon="cil-dollar" size="xl"/>  
-                        <CFormInput type="text" id="text" name="text" placeholder="Valor"  v-model="valor"/> 
+                        <CFormInput type="text" id="text" name="text" placeholder="Valor"  v-model="valorDeposito"/> 
                     </template>
                   </CWidgetStatsF>
                   <br>
@@ -27,9 +27,9 @@
 
               <CCol :xs="6">
                 <CCol :xs="10">
-                  <CWidgetStatsF color="danger" :padding="false" title="SACAR" :value="200">
+                  <CWidgetStatsF color="danger" :padding="false" title="SACAR" :value="this.userProfile.saldo">
                     <template #icon><CIcon icon="cil-dollar" size="xl"/>  
-                        <CFormInput type="text" id="text" name="text" placeholder="Valor" v-model="valor" /> 
+                        <CFormInput type="text" id="text" name="text" placeholder="Valor" v-model="valorSaque" /> 
                     </template>
                   </CWidgetStatsF>
                   <br>
@@ -72,7 +72,8 @@ export default {
 
           userProfile: {
           },
-          valor:0,
+          valorSaque:0,
+          valorDeposito:0,
     }
   },
   methods:{
@@ -95,7 +96,7 @@ export default {
 
   async saque(){
     try{
-      const response = await service.getSaque(this.userProfile.id,this.valor);
+      const response = await service.getSaque(this.userProfile.id,this.valorSaque);
       swal('Sucesso', 'Deposito efetuado!', 'success');
       } catch(error){
         swal('Erro', 'Ocorreu um erro ao efetuar o deposito T.T', 'error');
@@ -105,7 +106,7 @@ export default {
 
   async deposito(){
     try{
-      const response = await service.getDeposito(this.userProfile.id,this.valor);
+      const response = await service.getDeposito(this.userProfile.id,this.valorDeposito);
       swal('Sucesso', 'Saque realizado!', 'success');
       } catch(error){
         swal('Erro', 'Ocorreu um erro ao concluir o saque! T.T', 'error');
